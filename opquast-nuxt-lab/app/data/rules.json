@@ -74,7 +74,7 @@
   {
     "id": 22,
     "title": "Système d'Authentification Unifiée",
-    "authors": ["Marco BARONI"],
+    "authors": ["Edwiyyin"],
     "path": "/rules/22",
     "description": "Un identifiant unique pour tous vos services",
     "tags": ["Sécurité", "Authentification", "UX", "Accessibilité"],
@@ -97,12 +97,12 @@
       "Vérifier l'accès aux services après authentification",
       "Vérifier l'historique d'activité est enregistré"
     ],
-    "screenshotsSources": []
+    "screenshotsSources": ["https://account.microsoft.com/"]
   },
   {
     "id": 23,
     "title": "L'utilisateur peut désactiver toutes ses connexions actives",
-    "authors": ["Marco BARONI"],
+    "authors": ["Edwiyyin"],
     "path": "/rules/23",
     "description": "Permettre à l'utilisateur de protéger ses données et contenus personnels en contrôlant ses sessions actives",
     "tags": ["Sécurité", "Authentification", "Confidentialité", "UX"],
@@ -121,12 +121,12 @@
     "control": [
       "Se connecter au service ou à l'espace privé à partir de plusieurs périphériques différents, et vérifier que le site permet de désactiver globalement toutes les connexions actives."
     ],
-    "screenshotsSources": []
+    "screenshotsSources": ["https://myaccount.google.com/device-activity", "https://github.com/settings/sessions"]
   },
   {
     "id": 24,
     "title": "Les adresses mail avec alias sont acceptées",
-    "authors": ["Marco BARONI"],
+    "authors": ["Edwiyyin"],
     "path": "/rules/24",
     "description": "Permettre aux utilisateurs d'utiliser des comptes mails dédiés à un usage spécifique et de tracer la diffusion de leurs adresses",
     "tags": ["Sécurité", "Authentification", "Email", "Confidentialité"],
@@ -150,7 +150,7 @@
   {
     "id": 25,
     "title": "L'en-tête HTTP Referrer-Policy est configuré",
-    "authors": ["Marco BARONI"],
+    "authors": ["Edwiyyin"],
     "path": "/rules/25",
     "description": "Contrôler les informations transmises par le serveur concernant la navigation des utilisateurs",
     "tags": [
@@ -178,12 +178,12 @@
       "Confirmer que la valeur utilisée est parmi les suivantes : no-referrer, same-origin, strict-origin, ou strict-origin-when-cross-origin",
       "Tester avec les outils de développement du navigateur (onglet Network / Headers) que l'en-tête est correctement envoyé"
     ],
-    "screenshotsSources": []
+    "screenshotsSources": ["https://securityheaders.com/"]
   },
   {
     "id": 26,
     "title": "Les messages d'erreur d'authentification ne révèlent pas l'existence de comptes",
-    "authors": ["Marco BARONI"],
+    "authors": ["Edwiyyin"],
     "path": "/rules/26",
     "description": "Ne pas divulguer d'informations sur l'existence de comptes utilisateurs lors des tentatives d'authentification",
     "tags": [
@@ -210,12 +210,12 @@
       "Vérifier que les messages de récupération de mot de passe ne confirment pas l'existence du compte",
       "Tester avec des adresses valides et invalides pour confirmer que les messages sont identiques"
     ],
-    "screenshotsSources": []
+    "screenshotsSources": ["https://github.com/login"]
   },
   {
     "id": 27,
     "title": "Un certificat de sécurité informatique valide est en place",
-    "authors": ["Marco BARONI"],
+    "authors": ["Edwiyyin"],
     "path": "/rules/27",
     "description": "Utiliser HTTPS et un certificat SSL valide pour protéger les données sensibles des utilisateurs",
     "tags": ["Sécurité", "HTTPS", "SSL", "Certificats", "Chiffrement"],
@@ -243,7 +243,7 @@
       "Si données sensibles sur page HTTP, vérifier que l'attribut action du formulaire pointe vers une URL HTTPS",
       "Vérifier l'en-tête HSTS est présent pour forcer HTTPS"
     ],
-    "screenshotsSources": []
+    "screenshotsSources": ["https://github.com","http://neverssl.com"]
   },
   {
     "id": 28,

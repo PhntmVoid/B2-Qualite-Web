@@ -1,589 +1,392 @@
+<script setup>
+import { getRuleById } from '~/data/rules'
+
+const ruleId = 27
+const rule = getRuleById(ruleId)
+const activeTab = ref('preview')
+</script>
+
 <template>
-  <div class="min-h-screen bg-zinc-950 p-6">
-    <div class="max-w-6xl mx-auto">
-      <!-- Header -->
-      <div class="text-center mb-8">
-        <h1 class="text-4xl font-bold text-zinc-100 mb-2">
-          Certificat de Sécurité HTTPS/SSL
-        </h1>
-        <p class="text-zinc-400">
-          Protéger les données sensibles avec le chiffrement SSL/TLS
-        </p>
+  <section v-if="rule" class="space-y-6">
+    <!-- Header -->
+    <header class="space-y-3">
+      <button
+        @click="$router.back()"
+        class="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-zinc-200 transition"
+      >
+        ← Retour
+      </button>
+      <div class="text-sm text-zinc-400">Règle n° {{ rule.id }}</div>
+
+      <h1
+        class="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-100"
+      >
+        {{ rule.title }}
+      </h1>
+
+      <div class="text-base sm:text-sm tracking-tight text-zinc-300">
+        {{ rule.description }}
       </div>
 
-      <!-- Main Content -->
-      <div class="space-y-8">
-        <!-- HTTP vs HTTPS Comparison -->
-        <div class="grid md:grid-cols-2 gap-6">
-          <!-- HTTP (Insecure) -->
+      <div class="flex flex-wrap gap-2">
+        <span
+          v-for="tag in rule.tags"
+          :key="tag"
+          class="text-xs rounded-full border border-zinc-800 bg-zinc-900/30 px-2.5 py-1 text-zinc-300"
+        >
+          {{ tag }}
+        </span>
+      </div>
+
+      <div
+        v-if="rule.authors && rule.authors.length"
+        class="text-sm text-zinc-400"
+      >
+        Écrit par
+        <span class="text-zinc-300">
+          {{ rule.authors.join(', ') }}
+        </span>
+      </div>
+    </header>
+
+    <!-- Objectif -->
+    <section class="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-6">
+      <h2 class="text-lg font-semibold tracking-tight text-zinc-100">
+        Objectif
+      </h2>
+
+      <ul class="mt-1 list-disc pl-5 space-y-2 text-sm text-zinc-300">
+        <li v-for="o in rule.objectives" :key="o">{{ o }}</li>
+      </ul>
+      <ul
+        v-if="Array.isArray(rule.objectives)"
+        class="mt-3 list-disc pl-5 space-y-2 text-sm text-zinc-300"
+      >
+        <li v-for="o in rule.objectives" :key="o">{{ o }}</li>
+      </ul>
+
+      <p v-else class="mt-1 list-disc pl-5 space-y-2 text-sm text-zinc-300">
+        {{ rule.objective }}
+      </p>
+    </section>
+
+    <!-- Mise en œuvre -->
+    <section class="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-6">
+      <h2 class="text-lg font-semibold tracking-tight text-zinc-100">
+        Mise en œuvre
+      </h2>
+
+      <p v-if="rule.implementationIntro" class="mt-3 text-sm text-zinc-400">
+        {{ rule.implementationIntro }}
+      </p>
+
+      <ul class="mt-1 list-disc pl-5 space-y-2 text-sm text-zinc-300">
+        <li v-for="x in rule.implementation" :key="x">{{ x }}</li>
+      </ul>
+    </section>
+
+    <!-- Contrôle -->
+    <section class="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-6">
+      <h2 class="text-lg font-semibold tracking-tight text-zinc-100">
+        Contrôle
+      </h2>
+
+      <ul class="mt-3 list-disc pl-5 space-y-2 text-sm text-zinc-300">
+        <li v-for="c in rule.control" :key="c">{{ c }}</li>
+      </ul>
+    </section>
+
+    <!-- Screenshots -->
+    <section class="space-y-4">
+      <h2 class="text-lg font-semibold tracking-tight text-zinc-100">
+        Screenshots
+      </h2>
+
+      <div class="flex gap-4 overflow-x-auto pb-4 scrollbar-light">
+        <div
+          v-for="(source, index) in rule.screenshotsSources"
+          :key="source + index"
+          class="shrink-0 w-[280px] sm:w-[340px]"
+        >
           <div
-            class="bg-zinc-900 rounded-lg shadow-md p-6 border border-red-900"
+            class="aspect-[16/10] rounded-2xl border border-zinc-800 bg-zinc-900/20 overflow-hidden flex items-center justify-center"
           >
-            <h2 class="text-xl font-bold text-red-400 mb-4 flex items-center">
-              <span class="mr-2">❌</span> HTTP (Non Sécurisé)
-            </h2>
-            <div class="space-y-4">
-              <div class="text-sm">
-                <p class="text-zinc-400 mb-2">
-                  <strong class="text-zinc-100">URL :</strong>
-                </p>
-                <div
-                  class="bg-red-950 p-3 rounded border border-red-900 font-mono text-xs"
-                >
-                  http://example.com/login
-                </div>
-              </div>
-
-              <div class="text-sm">
-                <p class="text-zinc-400 mb-2">
-                  <strong class="text-zinc-100">Caractéristiques :</strong>
-                </p>
-                <ul class="space-y-1 text-zinc-400">
-                  <li>❌ Pas de cadenas</li>
-                  <li>❌ Données non chiffrées</li>
-                  <li>❌ Vulnérable aux interceptions</li>
-                  <li>❌ Avertissement du navigateur</li>
-                </ul>
-              </div>
-
-              <div class="text-sm">
-                <p class="text-zinc-400 mb-2">
-                  <strong class="text-zinc-100">Risques :</strong>
-                </p>
-                <ul class="space-y-1 text-red-300 text-xs">
-                  <li>📡 Man-in-the-Middle attacks</li>
-                  <li>🔓 Vol de données sensibles</li>
-                  <li>⚠️ Modification en transit</li>
-                  <li>🎭 Impersonation du serveur</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <!-- HTTPS (Secure) -->
-          <div
-            class="bg-zinc-900 rounded-lg shadow-md p-6 border border-green-900"
-          >
-            <h2 class="text-xl font-bold text-green-400 mb-4 flex items-center">
-              <span class="mr-2">✓</span> HTTPS (Sécurisé)
-            </h2>
-            <div class="space-y-4">
-              <div class="text-sm">
-                <p class="text-zinc-400 mb-2">
-                  <strong class="text-zinc-100">URL :</strong>
-                </p>
-                <div
-                  class="bg-green-950 p-3 rounded border border-green-900 font-mono text-xs"
-                >
-                  🔒 https://example.com/login
-                </div>
-              </div>
-
-              <div class="text-sm">
-                <p class="text-zinc-400 mb-2">
-                  <strong class="text-zinc-100">Caractéristiques :</strong>
-                </p>
-                <ul class="space-y-1 text-zinc-400">
-                  <li>✓ Cadenas visible</li>
-                  <li>✓ Données chiffrées (TLS)</li>
-                  <li>✓ Certificat valide</li>
-                  <li>✓ Authentification serveur</li>
-                </ul>
-              </div>
-
-              <div class="text-sm">
-                <p class="text-zinc-400 mb-2">
-                  <strong class="text-zinc-100">Protections :</strong>
-                </p>
-                <ul class="space-y-1 text-green-300 text-xs">
-                  <li>🔐 Chiffrement bout à bout</li>
-                  <li>✓ Intégrité des données</li>
-                  <li>🆔 Authentification du serveur</li>
-                  <li>🔒 Prévention d'interception</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- SSL/TLS Certificate Info -->
-        <div
-          class="bg-zinc-900 rounded-lg shadow-md p-6 border border-zinc-800"
-        >
-          <h2 class="text-xl font-bold text-zinc-100 mb-4">
-            Certificat SSL/TLS
-          </h2>
-          <p class="text-zinc-400 mb-6">
-            Un certificat SSL (Secure Sockets Layer) / TLS (Transport Layer
-            Security) est un document numérique qui authentifie l'identité d'un
-            site et crée une connexion chiffrée.
-          </p>
-
-          <div class="grid md:grid-cols-2 gap-6">
-            <!-- Certificate Info -->
-            <div>
-              <h3 class="text-sm font-bold text-zinc-100 mb-3">
-                Informations du Certificat
-              </h3>
-              <div class="space-y-2 text-sm">
-                <div class="bg-zinc-800 p-3 rounded border border-zinc-700">
-                  <p class="text-zinc-400">
-                    <strong class="text-zinc-100">Domaine :</strong>
-                  </p>
-                  <p class="text-zinc-300">example.com</p>
-                </div>
-                <div class="bg-zinc-800 p-3 rounded border border-zinc-700">
-                  <p class="text-zinc-400">
-                    <strong class="text-zinc-100">Émis par :</strong>
-                  </p>
-                  <p class="text-zinc-300">Let's Encrypt Authority</p>
-                </div>
-                <div class="bg-zinc-800 p-3 rounded border border-zinc-700">
-                  <p class="text-zinc-400">
-                    <strong class="text-zinc-100">Valide du :</strong>
-                  </p>
-                  <p class="text-zinc-300">01/01/2024 au 01/01/2025</p>
-                </div>
-                <div class="bg-zinc-800 p-3 rounded border border-zinc-700">
-                  <p class="text-zinc-400">
-                    <strong class="text-zinc-100">Algorithme :</strong>
-                  </p>
-                  <p class="text-zinc-300">RSA 2048 bits ou ECDSA 256 bits</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Certificate Chain -->
-            <div>
-              <h3 class="text-sm font-bold text-zinc-100 mb-3">
-                Chaîne d'Autorité
-              </h3>
-              <div class="space-y-2">
-                <div class="bg-green-950 p-3 rounded border border-green-900">
-                  <p class="text-xs text-green-400 font-mono mb-1">
-                    🔒 Certificat du serveur
-                  </p>
-                  <p class="text-xs text-green-300">example.com</p>
-                </div>
-                <div class="text-center text-zinc-500">↓</div>
-                <div class="bg-blue-950 p-3 rounded border border-blue-900">
-                  <p class="text-xs text-blue-400 font-mono mb-1">
-                    📄 Certificat intermédiaire
-                  </p>
-                  <p class="text-xs text-blue-300">Let's Encrypt Authority</p>
-                </div>
-                <div class="text-center text-zinc-500">↓</div>
-                <div class="bg-purple-950 p-3 rounded border border-purple-900">
-                  <p class="text-xs text-purple-400 font-mono mb-1">
-                    🏛️ Certificat racine
-                  </p>
-                  <p class="text-xs text-purple-300">Root Authority</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Security Indicators -->
-        <div
-          class="bg-zinc-900 rounded-lg shadow-md p-6 border border-zinc-800"
-        >
-          <h2 class="text-xl font-bold text-zinc-100 mb-4">
-            Indicateurs de Sécurité du Navigateur
-          </h2>
-          <p class="text-zinc-400 mb-6">
-            Les navigateurs modernes affichent des indicateurs visuels pour
-            confirmer qu'une page est sécurisée.
-          </p>
-
-          <div class="space-y-4">
-            <div
-              v-for="indicator in securityIndicators"
-              :key="indicator.id"
-              class="bg-zinc-800 p-4 rounded border border-zinc-700"
+            <!-- Image -->
+            <a
+              :href="`/screenshots/rule-${rule.id}/screenshot-${index + 1}.png`"
+              target="_blank"
+              rel="noreferrer"
+              class="block cursor-zoom-in"
             >
-              <h3 class="text-sm font-bold text-zinc-100 mb-2">
-                {{ indicator.name }}
-              </h3>
-              <p class="text-sm text-zinc-400 mb-3">
-                {{ indicator.description }}
-              </p>
-              <div
-                class="bg-zinc-900 p-3 rounded text-xs font-mono border border-zinc-700"
-              >
-                <span class="text-green-400">✓</span>
-                <span class="text-zinc-300">{{ indicator.example }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- OpenID Authentication -->
-        <div
-          class="bg-zinc-900 rounded-lg shadow-md p-6 border border-zinc-800"
-        >
-          <h2 class="text-xl font-bold text-zinc-100 mb-4">
-            Authentification Décentralisée (OpenID)
-          </h2>
-          <p class="text-zinc-400 mb-6">
-            OpenID permet aux utilisateurs de se connecter avec un fournisseur
-            d'identité externe et centralisé.
-          </p>
-
-          <div class="grid md:grid-cols-2 gap-6">
-            <div>
-              <h3 class="text-sm font-bold text-zinc-100 mb-3">Avantages</h3>
-              <ul class="space-y-2">
-                <li class="flex items-start">
-                  <span class="text-green-400 mr-2">✓</span>
-                  <span class="text-zinc-300 text-sm">
-                    Un seul compte pour plusieurs services
-                  </span>
-                </li>
-                <li class="flex items-start">
-                  <span class="text-green-400 mr-2">✓</span>
-                  <span class="text-zinc-300 text-sm">
-                    Pas de partage de mot de passe
-                  </span>
-                </li>
-                <li class="flex items-start">
-                  <span class="text-green-400 mr-2">✓</span>
-                  <span class="text-zinc-300 text-sm">
-                    Fournisseur certifié gère la sécurité
-                  </span>
-                </li>
-                <li class="flex items-start">
-                  <span class="text-green-400 mr-2">✓</span>
-                  <span class="text-zinc-300 text-sm">
-                    Meilleure gestion de l'identité
-                  </span>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 class="text-sm font-bold text-zinc-100 mb-3">
-                Flux de Connexion OpenID
-              </h3>
-              <div class="space-y-2 text-sm">
-                <div class="bg-zinc-800 p-2 rounded border border-zinc-700">
-                  <p class="text-zinc-300">
-                    1. Utilisateur clique "Se connecter avec OpenID"
-                  </p>
-                </div>
-                <div class="text-center text-zinc-500 text-xs">↓</div>
-                <div class="bg-zinc-800 p-2 rounded border border-zinc-700">
-                  <p class="text-zinc-300">
-                    2. Redirection vers fournisseur OpenID
-                  </p>
-                </div>
-                <div class="text-center text-zinc-500 text-xs">↓</div>
-                <div class="bg-zinc-800 p-2 rounded border border-zinc-700">
-                  <p class="text-zinc-300">3. Authentification sécurisée</p>
-                </div>
-                <div class="text-center text-zinc-500 text-xs">↓</div>
-                <div class="bg-green-950 p-2 rounded border border-green-900">
-                  <p class="text-green-300">4. Retour au site avec token</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Common Certificate Errors -->
-        <div class="bg-zinc-900 rounded-lg shadow-md p-6 border border-red-900">
-          <h2 class="text-xl font-bold text-red-400 mb-4">
-            Erreurs Courantes de Certificat
-          </h2>
-          <div class="space-y-3">
-            <div
-              v-for="error in certificateErrors"
-              :key="error.id"
-              class="bg-red-950 p-4 rounded border border-red-900"
-            >
-              <h3 class="text-sm font-bold text-red-300 mb-1">
-                {{ error.name }}
-              </h3>
-              <p class="text-xs text-red-200 mb-2">{{ error.description }}</p>
-              <p class="text-xs text-red-400">
-                <strong>Solution :</strong> {{ error.solution }}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Best Practices -->
-        <div
-          class="bg-zinc-900 rounded-lg shadow-md p-6 border border-zinc-800"
-        >
-          <h2 class="text-xl font-bold text-zinc-100 mb-4">Bonnes Pratiques</h2>
-          <ul class="space-y-3">
-            <li class="flex items-start">
-              <span class="text-green-400 mr-3">✓</span>
-              <span class="text-zinc-300">
-                Utiliser <strong class="text-zinc-100">HTTPS partout</strong>,
-                pas seulement sur les pages sensibles
-              </span>
-            </li>
-            <li class="flex items-start">
-              <span class="text-green-400 mr-3">✓</span>
-              <span class="text-zinc-300">
-                Rediriger automatiquement
-                <strong class="text-zinc-100">HTTP vers HTTPS</strong>
-              </span>
-            </li>
-            <li class="flex items-start">
-              <span class="text-green-400 mr-3">✓</span>
-              <span class="text-zinc-300">
-                Configurer
-                <strong class="text-zinc-100"
-                  >HSTS (HTTP Strict Transport Security)</strong
-                >
-                pour forcer HTTPS
-              </span>
-            </li>
-            <li class="flex items-start">
-              <span class="text-green-400 mr-3">✓</span>
-              <span class="text-zinc-300">
-                Renouveler le certificat
-                <strong class="text-zinc-100">avant expiration</strong>
-              </span>
-            </li>
-            <li class="flex items-start">
-              <span class="text-green-400 mr-3">✓</span>
-              <span class="text-zinc-300">
-                Utiliser des certificats
-                <strong class="text-zinc-100">RSA 2048+ ou ECDSA 256+</strong>
-              </span>
-            </li>
-            <li class="flex items-start">
-              <span class="text-green-400 mr-3">✓</span>
-              <span class="text-zinc-300">
-                Mettre en place les
-                <strong class="text-zinc-100">en-têtes de sécurité</strong>
-                (CSP, X-Frame-Options, etc.)
-              </span>
-            </li>
-            <li class="flex items-start">
-              <span class="text-green-400 mr-3">✓</span>
-              <span class="text-zinc-300">
-                Considérer <strong class="text-zinc-100">OpenID</strong> pour
-                l'authentification centralisée
-              </span>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Implementation Checklist -->
-        <div
-          class="bg-zinc-900 rounded-lg shadow-md p-6 border border-zinc-800"
-        >
-          <h2 class="text-xl font-bold text-zinc-100 mb-4">
-            Checklist d'Implémentation
-          </h2>
-          <div class="space-y-3">
-            <label
-              v-for="(item, index) in checklist"
-              :key="index"
-              class="flex items-center p-3 rounded bg-zinc-800 cursor-pointer hover:bg-zinc-700 transition"
-            >
-              <input
-                type="checkbox"
-                v-model="checklist[index].checked"
-                class="w-4 h-4 rounded border-zinc-600"
+              <img
+                :src="`/screenshots/rule-${rule.id}/screenshot-${
+                  index + 1
+                }.png`"
+                :alt="`Exemple d'application de la règle ${rule.id}`"
+                class="h-full w-full object-cover"
+                onerror="
+                  this.style.display = 'none'
+                  this.nextElementSibling.style.display = 'block'
+                "
               />
-              <span class="ml-3 text-zinc-300">{{ item.text }}</span>
-            </label>
+            </a>
+
+            <!-- Placeholder -->
+            <div class="hidden text-center px-4">
+              <div class="text-sm text-zinc-300 font-medium">
+                Screenshot à ajouter
+              </div>
+              <div class="mt-1 text-xs text-zinc-500">Exemple réel attendu</div>
+            </div>
           </div>
-        </div>
 
-        <!-- Testing Procedures -->
-        <div
-          class="bg-zinc-900 rounded-lg shadow-md p-6 border border-zinc-800"
-        >
-          <h2 class="text-xl font-bold text-zinc-100 mb-4">
-            Procédures de Vérification
-          </h2>
-          <div class="space-y-4">
-            <div class="bg-zinc-800 p-4 rounded border border-zinc-700">
-              <h3 class="text-sm font-bold text-zinc-100 mb-2">
-                1. Tester la Redirection HTTP → HTTPS
-              </h3>
-              <p class="text-sm text-zinc-400">
-                Visitez le site via http (sans https) et vérifiez que vous êtes
-                automatiquement redirigé vers la version HTTPS.
-              </p>
-            </div>
-
-            <div class="bg-zinc-800 p-4 rounded border border-zinc-700">
-              <h3 class="text-sm font-bold text-zinc-100 mb-2">
-                2. Vérifier les Pages Sensibles
-              </h3>
-              <p class="text-sm text-zinc-400">
-                Vérifier que les pages contenant des données sensibles (login,
-                paiement, données bancaires) sont en HTTPS.
-              </p>
-            </div>
-
-            <div class="bg-zinc-800 p-4 rounded border border-zinc-700">
-              <h3 class="text-sm font-bold text-zinc-100 mb-2">
-                3. Inspecter le Certificat
-              </h3>
-              <p class="text-sm text-zinc-400">
-                Cliquez sur le cadenas dans la barre de navigation pour vérifier
-                les détails du certificat SSL/TLS.
-              </p>
-            </div>
-
-            <div class="bg-zinc-800 p-4 rounded border border-zinc-700">
-              <h3 class="text-sm font-bold text-zinc-100 mb-2">
-                4. Vérifier le Code du Formulaire
-              </h3>
-              <p class="text-sm text-zinc-400">
-                Si des données sensibles sont saisies sur une page HTTP,
-                vérifier que l'attribut "action" du formulaire pointe vers HTTPS
-                (moins sécurisé mais acceptable pour données non-bancaires).
-              </p>
-            </div>
-
-            <div class="bg-zinc-800 p-4 rounded border border-zinc-700">
-              <h3 class="text-sm font-bold text-zinc-100 mb-2">
-                5. Utiliser des Outils de Vérification
-              </h3>
-              <p class="text-sm text-zinc-400">
-                Utiliser des services comme SSL Labs ou Qualsys pour un audit
-                complet du certificat.
-              </p>
-            </div>
+          <!-- Source associée -->
+          <div class="mt-2 text-xs text-zinc-500">
+            Source :
+            <a
+              :href="source"
+              target="_blank"
+              rel="noreferrer"
+              class="underline underline-offset-4 hover:text-zinc-300"
+            >
+              {{ source }}
+            </a>
           </div>
         </div>
       </div>
-    </div>
-  </div>
+    </section>
+
+    <!-- Exemples -->
+    <section class="space-y-4">
+      <h2 class="text-lg font-semibold tracking-tight text-zinc-100">
+        Exemples
+      </h2>
+
+      <div
+        class="rounded-2xl border border-zinc-800 bg-zinc-900/30 overflow-hidden"
+      >
+        <!-- Tabs -->
+        <div class="flex border-b border-zinc-800">
+          <button
+            @click="activeTab = 'preview'"
+            :class="[
+              'px-5 py-3 text-sm transition',
+              activeTab === 'preview'
+                ? 'text-zinc-100 border-b-2 border-zinc-100'
+                : 'text-zinc-400 hover:text-zinc-200',
+            ]"
+          >
+            Rendu
+          </button>
+
+          <button
+            @click="activeTab = 'code'"
+            :class="[
+              'px-5 py-3 text-sm transition',
+              activeTab === 'code'
+                ? 'text-zinc-100 border-b-2 border-zinc-100'
+                : 'text-zinc-400 hover:text-zinc-200',
+            ]"
+          >
+            Code
+          </button>
+        </div>
+
+        <!-- Content -->
+        <div class="p-6">
+          <!-- RENDU -->
+          <div v-if="activeTab === 'preview'" class="space-y-4">
+            <div class="text-sm text-zinc-400">
+              Comparaison entre HTTP et HTTPS pour la sécurité des données
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-4">
+              <!-- HTTP - Insécurisé -->
+              <div class="rounded-xl border border-red-900 bg-zinc-950 p-5">
+                <div class="flex items-center gap-2 mb-3">
+                  <span class="text-red-400 text-xl">⚠</span>
+                  <h4 class="font-semibold text-red-300">HTTP - Non sécurisé</h4>
+                </div>
+
+                <div class="bg-zinc-900 rounded-lg p-4 border border-zinc-800 mb-3">
+                  <div class="flex items-center gap-2 mb-3 pb-3 border-b border-zinc-800">
+                    <div class="flex items-center gap-2 flex-1 bg-zinc-800 rounded px-3 py-1.5">
+                      <span class="text-red-400">🔓</span>
+                      <span class="text-xs text-zinc-400">http://exemple.com</span>
+                    </div>
+                  </div>
+                  
+                  <div class="space-y-2 text-xs">
+                    <div class="flex items-start gap-2">
+                      <span class="text-red-400">✗</span>
+                      <span class="text-zinc-400">Données transmises en clair</span>
+                    </div>
+                    <div class="flex items-start gap-2">
+                      <span class="text-red-400">✗</span>
+                      <span class="text-zinc-400">Vulnérable aux interceptions</span>
+                    </div>
+                    <div class="flex items-start gap-2">
+                      <span class="text-red-400">✗</span>
+                      <span class="text-zinc-400">Pas de vérification d'identité</span>
+                    </div>
+                    <div class="flex items-start gap-2">
+                      <span class="text-red-400">✗</span>
+                      <span class="text-zinc-400">Avertissement navigateur</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-red-900/20 border border-red-900 rounded p-3">
+                  <p class="text-xs text-red-300">
+                    ⚠ Les navigateurs affichent des avertissements de sécurité
+                  </p>
+                </div>
+              </div>
+
+              <!-- HTTPS - Sécurisé -->
+              <div class="rounded-xl border border-green-900 bg-zinc-950 p-5">
+                <div class="flex items-center gap-2 mb-3">
+                  <span class="text-green-400 text-xl">✓</span>
+                  <h4 class="font-semibold text-green-300">HTTPS - Sécurisé</h4>
+                </div>
+
+                <div class="bg-zinc-900 rounded-lg p-4 border border-zinc-800 mb-3">
+                  <div class="flex items-center gap-2 mb-3 pb-3 border-b border-zinc-800">
+                    <div class="flex items-center gap-2 flex-1 bg-zinc-800 rounded px-3 py-1.5">
+                      <span class="text-green-400">🔒</span>
+                      <span class="text-xs text-zinc-100">https://exemple.com</span>
+                    </div>
+                  </div>
+                  
+                  <div class="space-y-2 text-xs">
+                    <div class="flex items-start gap-2">
+                      <span class="text-green-400">✓</span>
+                      <span class="text-zinc-300">Chiffrement des données</span>
+                    </div>
+                    <div class="flex items-start gap-2">
+                      <span class="text-green-400">✓</span>
+                      <span class="text-zinc-300">Protection contre l'interception</span>
+                    </div>
+                    <div class="flex items-start gap-2">
+                      <span class="text-green-400">✓</span>
+                      <span class="text-zinc-300">Vérification de l'identité</span>
+                    </div>
+                    <div class="flex items-start gap-2">
+                      <span class="text-green-400">✓</span>
+                      <span class="text-zinc-300">Confiance des utilisateurs</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-green-900/20 border border-green-900 rounded p-3">
+                  <p class="text-xs text-green-300">
+                    ✓ Certificat SSL/TLS valide
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CODE -->
+          <div v-else>
+            <pre
+              class="rounded-xl bg-zinc-950 p-5 overflow-x-auto text-sm text-zinc-100"
+            >
+<code>
+&lt;!-- Configuration de redirection HTTP vers HTTPS --&gt;
+
+&lt;!-- Dans Nginx --&gt;
+server {
+    listen 80;
+    server_name exemple.com www.exemple.com;
+    return 301 https://$server_name$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name exemple.com www.exemple.com;
+    
+    ssl_certificate /path/to/cert.pem;
+    ssl_certificate_key /path/to/key.pem;
+    
+    # Configurations SSL recommandées
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+    ssl_prefer_server_ciphers on;
+    
+    # HSTS (optionnel mais recommandé)
+    add_header Strict-Transport-Security &quot;max-age=31536000; includeSubDomains&quot; always;
+}
+
+&lt;!-- Dans Apache --&gt;
+&lt;VirtualHost *:80&gt;
+    ServerName exemple.com
+    Redirect permanent / https://exemple.com/
+&lt;/VirtualHost&gt;
+
+&lt;VirtualHost *:443&gt;
+    ServerName exemple.com
+    
+    SSLEngine on
+    SSLCertificateFile /path/to/cert.pem
+    SSLCertificateKeyFile /path/to/key.pem
+    
+    # Protocoles et chiffrements recommandés
+    SSLProtocol all -SSLv3 -TLSv1 -TLSv1.1
+    SSLCipherSuite HIGH:!aNULL:!MD5
+    
+    # HSTS
+    Header always set Strict-Transport-Security &quot;max-age=31536000; includeSubDomains&quot;
+&lt;/VirtualHost&gt;
+
+&lt;!-- Obtenir un certificat SSL gratuit avec Let's Encrypt --&gt;
+# Installation de Certbot
+sudo apt install certbot python3-certbot-nginx
+
+# Obtenir et installer automatiquement le certificat
+sudo certbot --nginx -d exemple.com -d www.exemple.com
+
+# Renouvellement automatique
+sudo certbot renew --dry-run
+
+&lt;!-- Forcer HTTPS en HTML --&gt;
+&lt;meta http-equiv=&quot;Content-Security-Policy&quot; content=&quot;upgrade-insecure-requests&quot;&gt;
+</code>
+</pre>
+
+            <p class="mt-3 text-xs text-zinc-500">
+              HTTPS utilise SSL/TLS pour chiffrer toutes les communications entre le navigateur et le serveur, protégeant les données sensibles contre l'interception et garantissant l'authenticité du site web.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <section v-else class="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-6">
+    <h1 class="text-lg font-semibold text-zinc-100">Règle introuvable</h1>
+    <p class="mt-2 text-sm text-zinc-400">
+      Vérifiez que la règle existe dans
+      <code class="text-zinc-300">rules.json</code>.
+    </p>
+  </section>
 </template>
 
-<script setup>
-import { ref } from 'vue'
-
-const securityIndicators = [
-  {
-    id: 1,
-    name: "Cadenas dans la Barre d'Adresse",
-    description:
-      "Un cadenas vert apparaît à côté de l'URL, indiquant une connexion sécurisée.",
-    example: '🔒 https://example.com',
-  },
-  {
-    id: 2,
-    name: 'URL en HTTPS',
-    description: "L'adresse commence par 'https://' au lieu de 'http://'.",
-    example: '🔐 https://secure.example.com/account',
-  },
-  {
-    id: 3,
-    name: 'Détails du Certificat',
-    description:
-      'Cliquer sur le cadenas affiche les informations du certificat SSL/TLS.',
-    example: '📄 Certificat valide pour example.com',
-  },
-  {
-    id: 4,
-    name: "Barre d'Adresse Colorée",
-    description:
-      "Certains navigateurs changent la couleur de la barre d'adresse pour HTTPS.",
-    example: '🟢 Barre verte pour https://',
-  },
-  {
-    id: 5,
-    name: 'EV Certificate (Optional)',
-    description:
-      "Un certificat EV affiche le nom de l'organisation dans la barre d'adresse.",
-    example: '🏢 Nom Entreprise | https://example.com',
-  },
-]
-
-const certificateErrors = [
-  {
-    id: 1,
-    name: 'Certificat Expiré',
-    description: "Le certificat SSL a dépassé sa date d'expiration.",
-    solution: "Renouveler le certificat auprès de l'autorité de certification.",
-  },
-  {
-    id: 2,
-    name: 'Nom de Domaine Non Valide',
-    description: 'Le certificat est valide mais pour un domaine différent.',
-    solution:
-      'Obtenir un certificat pour le bon domaine ou utiliser un certificat wildcard.',
-  },
-  {
-    id: 3,
-    name: 'Autorité de Certification Non Reconnue',
-    description:
-      "L'autorité qui a émis le certificat n'est pas reconnue par le navigateur.",
-    solution:
-      "Utiliser une autorité de certification reconnue (Let's Encrypt, DigiCert, etc.).",
-  },
-  {
-    id: 4,
-    name: 'Certificat Auto-Signé',
-    description: "Le certificat n'est pas signé par une autorité reconnue.",
-    solution:
-      'Obtenir un certificat signé par une autorité de certification de confiance.',
-  },
-  {
-    id: 5,
-    name: 'Chaîne de Certificats Incomplète',
-    description: 'Un ou plusieurs certificats intermédiaires manquent.',
-    solution:
-      'Configurer le serveur pour inclure tous les certificats de la chaîne.',
-  },
-]
-
-const checklist = ref([
-  {
-    text: 'Obtenir un certificat SSL/TLS valide',
-    checked: false,
-  },
-  {
-    text: 'Configurer le serveur pour HTTPS',
-    checked: false,
-  },
-  {
-    text: 'Rediriger HTTP vers HTTPS',
-    checked: false,
-  },
-  {
-    text: "Configurer l'en-tête HSTS",
-    checked: false,
-  },
-  {
-    text: 'Utiliser RSA 2048+ ou ECDSA 256+',
-    checked: false,
-  },
-  {
-    text: 'Mettre en place les en-têtes de sécurité (CSP, X-Frame-Options)',
-    checked: false,
-  },
-  {
-    text: 'Vérifier les pages sensibles en HTTPS',
-    checked: false,
-  },
-  {
-    text: 'Tester la redirection HTTP → HTTPS',
-    checked: false,
-  },
-  {
-    text: 'Vérifier la validité du certificat',
-    checked: false,
-  },
-  {
-    text: 'Mettre en place le renouvellement automatique',
-    checked: false,
-  },
-  {
-    text: "Considérer OpenID pour l'authentification",
-    checked: false,
-  },
-])
-</script>
+<style scoped>
+.scrollbar-light {
+  scrollbar-color: transparent transparent;
+  border-radius: 4px;
+}
+.scrollbar-dark {
+  scrollbar-color: transparent transparent;
+  border-radius: 4px;
+}
+.scrollbar-light:hover {
+  scrollbar-color: #a3a3a3 transparent;
+  border-radius: 4px;
+}
+.scrollbar-dark:hover {
+  scrollbar-color: #4d4d4d transparent;
+  border-radius: 4px;
+}
+</style>

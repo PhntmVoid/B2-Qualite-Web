@@ -1,342 +1,361 @@
+<script setup>
+import { getRuleById } from '~/data/rules'
+
+const ruleId = 23
+const rule = getRuleById(ruleId)
+const activeTab = ref('preview')
+</script>
+
 <template>
-  <div class="min-h-screen bg-zinc-950 p-6">
-    <div class="max-w-6xl mx-auto">
-      <!-- Header -->
-      <div class="text-center mb-8">
-        <h1 class="text-4xl font-bold text-zinc-100 mb-2">
-          Gestion des Sessions Actives
-        </h1>
-        <p class="text-zinc-400">
-          Contrôlez l'accès à votre compte depuis tous vos appareils
-        </p>
+  <section v-if="rule" class="space-y-6">
+    <!-- Header -->
+    <header class="space-y-3">
+      <button
+        @click="$router.back()"
+        class="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-zinc-200 transition"
+      >
+        ← Retour
+      </button>
+      <div class="text-sm text-zinc-400">Règle n° {{ rule.id }}</div>
+
+      <h1
+        class="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-100"
+      >
+        {{ rule.title }}
+      </h1>
+
+      <div class="text-base sm:text-sm tracking-tight text-zinc-300">
+        {{ rule.description }}
       </div>
 
-      <!-- Main Content -->
-      <div class="space-y-8">
-        <!-- Security Info Card -->
-        <div
-          class="bg-zinc-900 rounded-lg shadow-md p-6 border border-zinc-800"
+      <div class="flex flex-wrap gap-2">
+        <span
+          v-for="tag in rule.tags"
+          :key="tag"
+          class="text-xs rounded-full border border-zinc-800 bg-zinc-900/30 px-2.5 py-1 text-zinc-300"
         >
-          <h2 class="text-xl font-bold text-zinc-100 mb-3">
-            Sécurité de Votre Compte
-          </h2>
-          <p class="text-zinc-400 mb-4">
-            Vous pouvez voir tous les appareils connectés à votre compte et
-            déconnecter ceux que vous ne reconnaissez pas ou n'utilisez plus.
-          </p>
-          <div class="flex gap-4">
-            <button
-              @click="disconnectAllSessions"
-              class="px-4 py-2 bg-red-900 text-red-100 rounded-lg hover:bg-red-800 transition-colors font-semibold"
+          {{ tag }}
+        </span>
+      </div>
+
+      <div
+        v-if="rule.authors && rule.authors.length"
+        class="text-sm text-zinc-400"
+      >
+        Écrit par
+        <span class="text-zinc-300">
+          {{ rule.authors.join(', ') }}
+        </span>
+      </div>
+    </header>
+
+    <!-- Objectif -->
+    <section class="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-6">
+      <h2 class="text-lg font-semibold tracking-tight text-zinc-100">
+        Objectif
+      </h2>
+
+      <ul class="mt-1 list-disc pl-5 space-y-2 text-sm text-zinc-300">
+        <li v-for="o in rule.objectives" :key="o">{{ o }}</li>
+      </ul>
+      <ul
+        v-if="Array.isArray(rule.objectives)"
+        class="mt-3 list-disc pl-5 space-y-2 text-sm text-zinc-300"
+      >
+        <li v-for="o in rule.objectives" :key="o">{{ o }}</li>
+      </ul>
+
+      <p v-else class="mt-1 list-disc pl-5 space-y-2 text-sm text-zinc-300">
+        {{ rule.objective }}
+      </p>
+    </section>
+
+    <!-- Mise en œuvre -->
+    <section class="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-6">
+      <h2 class="text-lg font-semibold tracking-tight text-zinc-100">
+        Mise en œuvre
+      </h2>
+
+      <p v-if="rule.implementationIntro" class="mt-3 text-sm text-zinc-400">
+        {{ rule.implementationIntro }}
+      </p>
+
+      <ul class="mt-1 list-disc pl-5 space-y-2 text-sm text-zinc-300">
+        <li v-for="x in rule.implementation" :key="x">{{ x }}</li>
+      </ul>
+    </section>
+
+    <!-- Contrôle -->
+    <section class="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-6">
+      <h2 class="text-lg font-semibold tracking-tight text-zinc-100">
+        Contrôle
+      </h2>
+
+      <ul class="mt-3 list-disc pl-5 space-y-2 text-sm text-zinc-300">
+        <li v-for="c in rule.control" :key="c">{{ c }}</li>
+      </ul>
+    </section>
+
+    <!-- Screenshots -->
+    <section class="space-y-4">
+      <h2 class="text-lg font-semibold tracking-tight text-zinc-100">
+        Screenshots
+      </h2>
+
+      <div class="flex gap-4 overflow-x-auto pb-4 scrollbar-light">
+        <div
+          v-for="(source, index) in rule.screenshotsSources"
+          :key="source + index"
+          class="shrink-0 w-[280px] sm:w-[340px]"
+        >
+          <div
+            class="aspect-[16/10] rounded-2xl border border-zinc-800 bg-zinc-900/20 overflow-hidden flex items-center justify-center"
+          >
+            <!-- Image -->
+            <a
+              :href="`/screenshots/rule-${rule.id}/screenshot-${index + 1}.png`"
+              target="_blank"
+              rel="noreferrer"
+              class="block cursor-zoom-in"
             >
-              Déconnecter Tous les Appareils
-            </button>
-            <button
-              @click="refreshSessions"
-              class="px-4 py-2 bg-zinc-700 text-zinc-100 rounded-lg hover:bg-zinc-600 transition-colors font-semibold"
+              <img
+                :src="`/screenshots/rule-${rule.id}/screenshot-${
+                  index + 1
+                }.png`"
+                :alt="`Exemple d'application de la règle ${rule.id}`"
+                class="h-full w-full object-cover"
+                onerror="
+                  this.style.display = 'none'
+                  this.nextElementSibling.style.display = 'block'
+                "
+              />
+            </a>
+
+            <!-- Placeholder -->
+            <div class="hidden text-center px-4">
+              <div class="text-sm text-zinc-300 font-medium">
+                Screenshot à ajouter
+              </div>
+              <div class="mt-1 text-xs text-zinc-500">Exemple réel attendu</div>
+            </div>
+          </div>
+
+          <!-- Source associée -->
+          <div class="mt-2 text-xs text-zinc-500">
+            Source :
+            <a
+              :href="source"
+              target="_blank"
+              rel="noreferrer"
+              class="underline underline-offset-4 hover:text-zinc-300"
             >
-              Actualiser
-            </button>
+              {{ source }}
+            </a>
           </div>
         </div>
+      </div>
+    </section>
 
-        <!-- Active Sessions List -->
-        <div
-          class="bg-zinc-900 rounded-lg shadow-md p-6 border border-zinc-800"
-        >
-          <h2 class="text-2xl font-bold text-zinc-100 mb-6">
-            Sessions Actives ({{ sessions.length }})
-          </h2>
+    <!-- Exemples -->
+    <section class="space-y-4">
+      <h2 class="text-lg font-semibold tracking-tight text-zinc-100">
+        Exemples
+      </h2>
 
-          <div v-if="sessions.length === 0" class="text-center py-12">
-            <p class="text-zinc-400">Aucune session active</p>
-          </div>
+      <div
+        class="rounded-2xl border border-zinc-800 bg-zinc-900/30 overflow-hidden"
+      >
+        <!-- Tabs -->
+        <div class="flex border-b border-zinc-800">
+          <button
+            @click="activeTab = 'preview'"
+            :class="[
+              'px-5 py-3 text-sm transition',
+              activeTab === 'preview'
+                ? 'text-zinc-100 border-b-2 border-zinc-100'
+                : 'text-zinc-400 hover:text-zinc-200',
+            ]"
+          >
+            Rendu
+          </button>
 
-          <div v-else class="space-y-4">
-            <div
-              v-for="(session, index) in sessions"
-              :key="index"
-              class="bg-zinc-800 rounded-lg p-4 border border-zinc-700 hover:border-zinc-600 transition-colors"
-            >
-              <div class="flex items-start justify-between">
-                <div class="flex-1">
-                  <!-- Device Info -->
-                  <div class="flex items-center gap-3 mb-3">
-                    <div
-                      class="w-10 h-10 bg-zinc-700 rounded-lg flex items-center justify-center text-zinc-100 font-bold text-lg"
-                    >
-                      {{ session.icon }}
-                    </div>
-                    <div>
-                      <h3 class="text-lg font-semibold text-zinc-100">
-                        {{ session.device }}
-                      </h3>
-                      <p class="text-sm text-zinc-400">{{ session.browser }}</p>
-                    </div>
-                    <div
-                      v-if="session.isCurrent"
-                      class="ml-auto px-3 py-1 bg-green-900 text-green-300 rounded-full text-xs font-semibold"
-                    >
-                      Session Actuelle
-                    </div>
-                  </div>
+          <button
+            @click="activeTab = 'code'"
+            :class="[
+              'px-5 py-3 text-sm transition',
+              activeTab === 'code'
+                ? 'text-zinc-100 border-b-2 border-zinc-100'
+                : 'text-zinc-400 hover:text-zinc-200',
+            ]"
+          >
+            Code
+          </button>
+        </div>
 
-                  <!-- Session Details -->
-                  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-3">
-                    <div>
-                      <p class="text-xs text-zinc-500 mb-1">Localisation</p>
-                      <p class="text-sm text-zinc-300">
-                        {{ session.location }}
-                      </p>
-                    </div>
-                    <div>
-                      <p class="text-xs text-zinc-500 mb-1">Adresse IP</p>
-                      <p class="text-sm text-zinc-300 font-mono">
-                        {{ session.ip }}
-                      </p>
-                    </div>
-                    <div>
-                      <p class="text-xs text-zinc-500 mb-1">Connexion</p>
-                      <p class="text-sm text-zinc-300">
-                        {{ session.connectedDate }}
-                      </p>
-                    </div>
-                    <div>
-                      <p class="text-xs text-zinc-500 mb-1">Activité</p>
-                      <p class="text-sm text-zinc-300">
-                        {{ session.lastActivity }}
-                      </p>
-                    </div>
-                  </div>
+        <!-- Content -->
+        <div class="p-6">
+          <!-- RENDU -->
+          <div v-if="activeTab === 'preview'" class="space-y-4">
+            <div class="text-sm text-zinc-400">
+              Exemple de gestion des sessions actives pour contrôler l'accès depuis différents appareils
+            </div>
 
-                  <!-- Status Badge -->
-                  <div class="flex gap-2">
-                    <span
-                      :class="[
-                        'text-xs font-semibold px-2 py-1 rounded-full',
-                        session.isActive
-                          ? 'bg-green-900 text-green-300'
-                          : 'bg-zinc-700 text-zinc-300',
-                      ]"
-                    >
-                      {{ session.isActive ? '✓ Actif' : 'Inactif' }}
+            <div class="rounded-xl border border-zinc-800 bg-zinc-950 p-5">
+              <h3 class="text-lg font-semibold text-zinc-100 mb-4">
+                Sessions Actives
+              </h3>
+
+              <div class="space-y-3">
+                <div class="bg-zinc-900 rounded-lg p-4 border border-zinc-800">
+                  <div class="flex items-start justify-between gap-4">
+                    <div class="flex items-start gap-3">
+                      <div class="w-10 h-10 bg-zinc-800 rounded-lg flex items-center justify-center text-zinc-400">
+                        💻
+                      </div>
+                      <div>
+                        <div class="font-medium text-zinc-100">Windows PC</div>
+                        <div class="text-sm text-zinc-400">Chrome • Paris, France</div>
+                        <div class="text-xs text-zinc-500 mt-1">Connecté maintenant</div>
+                      </div>
+                    </div>
+                    <span class="text-xs px-2 py-1 bg-green-900 text-green-300 rounded-full">
+                      Actif
                     </span>
                   </div>
                 </div>
 
-                <!-- Disconnect Button -->
-                <button
-                  v-if="!session.isCurrent"
-                  @click="disconnectSession(index)"
-                  class="ml-4 px-3 py-2 bg-red-900 text-red-100 rounded-lg hover:bg-red-800 transition-colors text-sm font-semibold"
-                >
-                  Déconnecter
+                <div class="bg-zinc-900 rounded-lg p-4 border border-zinc-800">
+                  <div class="flex items-start justify-between gap-4">
+                    <div class="flex items-start gap-3">
+                      <div class="w-10 h-10 bg-zinc-800 rounded-lg flex items-center justify-center text-zinc-400">
+                        📱
+                      </div>
+                      <div>
+                        <div class="font-medium text-zinc-100">iPhone 14</div>
+                        <div class="text-sm text-zinc-400">Safari • Paris, France</div>
+                        <div class="text-xs text-zinc-500 mt-1">Il y a 2 heures</div>
+                      </div>
+                    </div>
+                    <button class="text-xs px-3 py-1 bg-red-900 text-red-300 rounded hover:bg-red-800 transition-colors">
+                      Déconnecter
+                    </button>
+                  </div>
+                </div>
+
+                <div class="bg-zinc-900 rounded-lg p-4 border border-zinc-800">
+                  <div class="flex items-start justify-between gap-4">
+                    <div class="flex items-start gap-3">
+                      <div class="w-10 h-10 bg-zinc-800 rounded-lg flex items-center justify-center text-zinc-400">
+                        💻
+                      </div>
+                      <div>
+                        <div class="font-medium text-zinc-100">MacBook Pro</div>
+                        <div class="text-sm text-zinc-400">Firefox • Lyon, France</div>
+                        <div class="text-xs text-zinc-500 mt-1">Il y a 1 jour</div>
+                      </div>
+                    </div>
+                    <button class="text-xs px-3 py-1 bg-red-900 text-red-300 rounded hover:bg-red-800 transition-colors">
+                      Déconnecter
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-4 pt-4 border-t border-zinc-800">
+                <button class="text-sm text-red-400 hover:text-red-300 transition-colors">
+                  Déconnecter toutes les autres sessions
                 </button>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- Recommendations -->
-        <div
-          class="bg-zinc-900 rounded-lg shadow-md p-6 border border-zinc-800"
-        >
-          <h2 class="text-xl font-bold text-zinc-100 mb-4">
-            Recommandations de Sécurité
-          </h2>
-          <div class="space-y-3">
-            <div class="flex gap-3">
-              <div
-                class="w-6 h-6 bg-zinc-800 rounded flex items-center justify-center text-zinc-300 font-bold text-sm flex-shrink-0"
-              >
-                1
-              </div>
-              <div>
-                <p class="text-zinc-100 font-semibold">
-                  Vérifiez régulièrement vos sessions
-                </p>
-                <p class="text-sm text-zinc-400">
-                  Consultez votre liste de sessions au moins une fois par mois
-                </p>
-              </div>
-            </div>
-            <div class="flex gap-3">
-              <div
-                class="w-6 h-6 bg-zinc-800 rounded flex items-center justify-center text-zinc-300 font-bold text-sm flex-shrink-0"
-              >
-                2
-              </div>
-              <div>
-                <p class="text-zinc-100 font-semibold">
-                  Déconnectez les appareils inconnus
-                </p>
-                <p class="text-sm text-zinc-400">
-                  Si vous voyez une session que vous ne reconnaissez pas,
-                  déconnectez-la immédiatement
-                </p>
-              </div>
-            </div>
-            <div class="flex gap-3">
-              <div
-                class="w-6 h-6 bg-zinc-800 rounded flex items-center justify-center text-zinc-300 font-bold text-sm flex-shrink-0"
-              >
-                3
-              </div>
-              <div>
-                <p class="text-zinc-100 font-semibold">
-                  Utilisez des mots de passe forts
-                </p>
-                <p class="text-sm text-zinc-400">
-                  Combinez majuscules, minuscules, chiffres et caractères
-                  spéciaux
-                </p>
-              </div>
-            </div>
-            <div class="flex gap-3">
-              <div
-                class="w-6 h-6 bg-zinc-800 rounded flex items-center justify-center text-zinc-300 font-bold text-sm flex-shrink-0"
-              >
-                4
-              </div>
-              <div>
-                <p class="text-zinc-100 font-semibold">
-                  Activez l'authentification à deux facteurs
-                </p>
-                <p class="text-sm text-zinc-400">
-                  Ajoutez une couche supplémentaire de sécurité à votre compte
-                </p>
-              </div>
-            </div>
+          <!-- CODE -->
+          <div v-else>
+            <pre
+              class="rounded-xl bg-zinc-950 p-5 overflow-x-auto text-sm text-zinc-100"
+            >
+<code>
+&lt;!-- Liste des sessions actives --&gt;
+&lt;div class=&quot;space-y-4&quot;&gt;
+  &lt;h3 class=&quot;text-lg font-semibold&quot;&gt;Sessions Actives&lt;/h3&gt;
+  
+  &lt;div class=&quot;space-y-3&quot;&gt;
+    &lt;!-- Session active --&gt;
+    &lt;div class=&quot;bg-zinc-900 rounded-lg p-4 border border-zinc-800&quot;&gt;
+      &lt;div class=&quot;flex items-start justify-between&quot;&gt;
+        &lt;div class=&quot;flex items-start gap-3&quot;&gt;
+          &lt;div class=&quot;w-10 h-10 bg-zinc-800 rounded-lg&quot;&gt;💻&lt;/div&gt;
+          &lt;div&gt;
+            &lt;div class=&quot;font-medium text-zinc-100&quot;&gt;Windows PC&lt;/div&gt;
+            &lt;div class=&quot;text-sm text-zinc-400&quot;&gt;Chrome • Paris, France&lt;/div&gt;
+            &lt;div class=&quot;text-xs text-zinc-500&quot;&gt;Connecté maintenant&lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;span class=&quot;text-xs px-2 py-1 bg-green-900 text-green-300 rounded-full&quot;&gt;
+          Actif
+        &lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Autres sessions --&gt;
+    &lt;div class=&quot;bg-zinc-900 rounded-lg p-4 border border-zinc-800&quot;&gt;
+      &lt;div class=&quot;flex items-start justify-between&quot;&gt;
+        &lt;div class=&quot;flex items-start gap-3&quot;&gt;
+          &lt;div class=&quot;w-10 h-10 bg-zinc-800 rounded-lg&quot;&gt;📱&lt;/div&gt;
+          &lt;div&gt;
+            &lt;div class=&quot;font-medium text-zinc-100&quot;&gt;iPhone 14&lt;/div&gt;
+            &lt;div class=&quot;text-sm text-zinc-400&quot;&gt;Safari • Paris, France&lt;/div&gt;
+            &lt;div class=&quot;text-xs text-zinc-500&quot;&gt;Il y a 2 heures&lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;button class=&quot;text-xs px-3 py-1 bg-red-900 text-red-300 rounded&quot;&gt;
+          Déconnecter
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Action globale --&gt;
+  &lt;button class=&quot;text-sm text-red-400&quot;&gt;
+    Déconnecter toutes les autres sessions
+  &lt;/button&gt;
+&lt;/div&gt;
+</code>
+</pre>
+
+            <p class="mt-3 text-xs text-zinc-500">
+              La gestion des sessions permet aux utilisateurs de voir et contrôler tous les appareils connectés à leur compte, améliorant ainsi la sécurité en cas d'accès non autorisé.
+            </p>
           </div>
         </div>
       </div>
-    </div>
+    </section>
+  </section>
 
-    <!-- Confirmation Modal -->
-    <div
-      v-if="showConfirmModal"
-      class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
-    >
-      <div
-        class="bg-zinc-900 rounded-lg p-6 max-w-sm w-full border border-zinc-800"
-      >
-        <h3 class="text-xl font-bold text-zinc-100 mb-3">
-          Confirmer la Déconnexion
-        </h3>
-        <p class="text-zinc-400 mb-6">{{ confirmMessage }}</p>
-        <div class="flex gap-3">
-          <button
-            @click="showConfirmModal = false"
-            class="flex-1 px-4 py-2 bg-zinc-700 text-zinc-100 rounded-lg hover:bg-zinc-600 transition-colors font-semibold"
-          >
-            Annuler
-          </button>
-          <button
-            @click="confirmDisconnect"
-            class="flex-1 px-4 py-2 bg-red-900 text-red-100 rounded-lg hover:bg-red-800 transition-colors font-semibold"
-          >
-            Déconnecter
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <section v-else class="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-6">
+    <h1 class="text-lg font-semibold text-zinc-100">Règle introuvable</h1>
+    <p class="mt-2 text-sm text-zinc-400">
+      Vérifiez que la règle existe dans
+      <code class="text-zinc-300">rules.json</code>.
+    </p>
+  </section>
 </template>
 
-<script>
-export default {
-  name: 'SessionManagement',
-  data() {
-    return {
-      sessions: [],
-      showConfirmModal: false,
-      confirmMessage: '',
-      pendingAction: null,
-      pendingIndex: null,
-    }
-  },
-  methods: {
-    disconnectSession(index) {
-      this.pendingAction = 'single'
-      this.pendingIndex = index
-      this.confirmMessage = `Êtes-vous sûr de vouloir déconnecter "${this.sessions[index].device}" ?`
-      this.showConfirmModal = true
-    },
-    disconnectAllSessions() {
-      this.pendingAction = 'all'
-      this.confirmMessage =
-        'Êtes-vous sûr de vouloir déconnecter tous les appareils ? Vous devrez vous reconnecter.'
-      this.showConfirmModal = true
-    },
-    confirmDisconnect() {
-      if (this.pendingAction === 'single') {
-        this.sessions.splice(this.pendingIndex, 1)
-      } else if (this.pendingAction === 'all') {
-        this.sessions = []
-      }
-      this.showConfirmModal = false
-      this.pendingAction = null
-      this.pendingIndex = null
-    },
-    refreshSessions() {
-      // Simulates a refresh - could fetch from API in real app
-      this.sessions = this.generateSessions()
-    },
-    generateSessions() {
-      return [
-        {
-          device: 'MacBook Pro - Safari',
-          browser: 'Safari sur macOS',
-          icon: '💻',
-          location: 'Paris, France',
-          ip: '192.168.1.45',
-          connectedDate: '29 Jan 2026',
-          lastActivity: "À l'instant",
-          isActive: true,
-          isCurrent: true,
-        },
-        {
-          device: 'iPhone 14 - Safari',
-          browser: 'Safari sur iOS',
-          icon: '📱',
-          location: 'Paris, France',
-          ip: '92.184.98.201',
-          connectedDate: '28 Jan 2026',
-          lastActivity: 'Il y a 2 heures',
-          isActive: true,
-          isCurrent: false,
-        },
-        {
-          device: 'iPad Pro - Chrome',
-          browser: 'Chrome sur iPadOS',
-          icon: '📱',
-          location: 'Lyon, France',
-          ip: '88.165.45.89',
-          connectedDate: '25 Jan 2026',
-          lastActivity: 'Il y a 1 jour',
-          isActive: false,
-          isCurrent: false,
-        },
-        {
-          device: 'Windows PC - Chrome',
-          browser: 'Chrome sur Windows',
-          icon: '🖥️',
-          location: 'Toulouse, France',
-          ip: '78.234.56.123',
-          connectedDate: '20 Jan 2026',
-          lastActivity: 'Il y a 5 jours',
-          isActive: false,
-          isCurrent: false,
-        },
-      ]
-    },
-  },
-  mounted() {
-    this.sessions = this.generateSessions()
-  },
-}
-</script>
-
 <style scoped>
-/* Additional custom styles if needed */
+.scrollbar-light {
+  scrollbar-color: transparent transparent;
+  border-radius: 4px;
+}
+.scrollbar-dark {
+  scrollbar-color: transparent transparent;
+  border-radius: 4px;
+}
+.scrollbar-light:hover {
+  scrollbar-color: #a3a3a3 transparent;
+  border-radius: 4px;
+}
+.scrollbar-dark:hover {
+  scrollbar-color: #4d4d4d transparent;
+  border-radius: 4px;
+}
 </style>
