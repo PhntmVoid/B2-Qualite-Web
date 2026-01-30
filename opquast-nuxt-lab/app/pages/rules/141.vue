@@ -36,6 +36,10 @@ const activeTab = ref('preview')
           {{ tag }}
         </span>
       </div>
+      
+      <div v-if="rule.authors && rule.authors.length" class="text-sm text-zinc-400">
+        Écrit par <span class="text-zinc-300">{{ rule.authors.join(', ') }}</span>
+      </div>
     </header>
 
     <section class="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-6">
@@ -67,36 +71,50 @@ const activeTab = ref('preview')
         <li v-for="c in rule.control" :key="c">{{ c }}</li>
       </ul>
     </section>
+    
+    <section class="space-y-4">
+      <h2 class="text-lg font-semibold tracking-tight text-zinc-100">Screenshots</h2>
+      <div class="flex gap-4 overflow-x-auto pb-4 scrollbar-light">
+        
+        <div class="shrink-0 w-[280px] sm:w-[340px]">
+          <div class="aspect-[16/10] rounded-2xl border border-green-900/30 bg-green-900/10 overflow-hidden flex items-center justify-center relative group">
+            <a href="/screenshots/rule-141/SCREEN1.png" target="_blank" class="block cursor-zoom-in w-full h-full">
+              <img src="/screenshots/rule-141/SCREEN1.png" alt="Bonne pratique" class="h-full w-full object-cover transition-transform group-hover:scale-105" />
+            </a>
+            <div class="absolute bottom-2 right-2 bg-green-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow">BON EXEMPLE</div>
+          </div>
+          <div class="mt-2 text-xs text-zinc-400 font-medium">Capture : Distinction couleur visité/non visité</div>
+        </div>
+
+        <div class="shrink-0 w-[280px] sm:w-[340px]">
+          <div class="aspect-[16/10] rounded-2xl border border-red-900/30 bg-red-900/10 overflow-hidden flex items-center justify-center relative group">
+            <a href="/screenshots/rule-141/SCREEN2.png" target="_blank" class="block cursor-zoom-in w-full h-full">
+              <img src="/screenshots/rule-141/SCREEN2.png" alt="Mauvaise pratique" class="h-full w-full object-cover transition-transform group-hover:scale-105" />
+            </a>
+            <div class="absolute bottom-2 right-2 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow">MAUVAIS EXEMPLE</div>
+          </div>
+          <div class="mt-2 text-xs text-zinc-400 font-medium">Capture : Aucune différence visuelle</div>
+        </div>
+
+      </div>
+    </section>
 
     <section class="space-y-4">
       <h2 class="text-lg font-semibold tracking-tight text-zinc-100">
         Exemples
       </h2>
 
-      <div
-        class="rounded-2xl border border-zinc-800 bg-zinc-900/30 overflow-hidden"
-      >
+      <div class="rounded-2xl border border-zinc-800 bg-zinc-900/30 overflow-hidden">
         <div class="flex border-b border-zinc-800">
           <button
             @click="activeTab = 'preview'"
-            :class="[
-              'px-5 py-3 text-sm transition',
-              activeTab === 'preview'
-                ? 'text-zinc-100 border-b-2 border-zinc-100'
-                : 'text-zinc-400 hover:text-zinc-200',
-            ]"
+            :class="['px-5 py-3 text-sm transition', activeTab === 'preview' ? 'text-zinc-100 border-b-2 border-zinc-100' : 'text-zinc-400 hover:text-zinc-200']"
           >
             Rendu
           </button>
-
           <button
             @click="activeTab = 'code'"
-            :class="[
-              'px-5 py-3 text-sm transition',
-              activeTab === 'code'
-                ? 'text-zinc-100 border-b-2 border-zinc-100'
-                : 'text-zinc-400 hover:text-zinc-200',
-            ]"
+            :class="['px-5 py-3 text-sm transition', activeTab === 'code' ? 'text-zinc-100 border-b-2 border-zinc-100' : 'text-zinc-400 hover:text-zinc-200']"
           >
             Code
           </button>
@@ -105,37 +123,52 @@ const activeTab = ref('preview')
         <div class="p-6">
           <div v-if="activeTab === 'preview'" class="space-y-6">
             <div class="text-sm text-zinc-400">
-              Ouverture de documents légaux (PDF) ou de liens externes : l'utilisateur doit être averti pour ne pas être surpris par le nouvel onglet.
+              Liste de rapports CVE. Si vous en avez déjà lu un, il est utile qu'il change de couleur.
             </div>
 
-            <div class="rounded-xl border border-zinc-800 bg-zinc-950 p-6 space-y-8">
+            <div class="grid gap-6 md:grid-cols-2">
               
-              <div>
-                <h3 class="text-sm text-zinc-500 font-medium mb-2 uppercase">Mention textuelle</h3>
-                <p class="text-zinc-300">
-                  Veuillez lire et signer la 
-                  <a href="#" target="_blank" class="text-blue-400 hover:underline">
-                    Charte Informatique (PDF - 2Mo)
-                    <span class="sr-only">ouvre une nouvelle fenêtre</span>
-                  </a>.
-                </p>
-                <p class="text-xs text-zinc-500 mt-1">
-                  (Ici, l'avertissement est caché visuellement mais lu par les lecteurs d'écran via "sr-only", car le contexte PDF suffit souvent visuellement).
+              <div class="rounded-xl border border-red-900/30 bg-red-950/5 p-5">
+                <div class="flex items-center gap-2 mb-3 text-red-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                  <span class="text-xs font-bold uppercase tracking-wide">État statique</span>
+                </div>
+                
+                <ul class="space-y-3 font-mono text-xs">
+                  <li>
+                    <a href="#" class="text-blue-400 hover:underline">CVE-2024-1001 : SQL Injection (Lu)</a>
+                  </li>
+                  <li>
+                    <a href="#" class="text-blue-400 hover:underline">CVE-2024-1002 : XSS Stored (Lu)</a>
+                  </li>
+                  <li>
+                    <a href="#" class="text-blue-400 hover:underline">CVE-2024-1003 : Buffer Overflow (Nouveau)</a>
+                  </li>
+                </ul>
+                <p class="mt-2 text-xs text-zinc-500 italic">
+                  (Impossible de distinguer visuellement ce qui a déjà été lu).
                 </p>
               </div>
 
-              <div class="h-px bg-zinc-900 w-full"></div>
-
-              <div>
-                <h3 class="text-sm text-zinc-500 font-medium mb-2 uppercase">Indicateur visuel (Icône)</h3>
-                <p class="text-zinc-300 flex items-center gap-2">
-                  Partenaire de certification :
-                  <a href="https://www.ssi.gouv.fr/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-zinc-200 hover:text-white px-3 py-2 bg-zinc-900 border border-zinc-800 rounded transition-colors group">
-                    <img src="https://upload.wikimedia.org/wikipedia/fr/thumb/3/37/ANSSI_logo.svg/1200px-ANSSI_logo.svg.png" alt="" class="h-4 w-auto grayscale group-hover:grayscale-0 transition-all opacity-70 group-hover:opacity-100">
-                    Site de l'ANSSI
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-500 group-hover:text-zinc-300"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                    <span class="sr-only">(nouvelle fenêtre)</span>
-                  </a>
+              <div class="rounded-xl border border-green-900/30 bg-green-950/5 p-5">
+                <div class="flex items-center gap-2 mb-3 text-green-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                  <span class="text-xs font-bold uppercase tracking-wide">État :visited actif</span>
+                </div>
+                
+                <ul class="space-y-3 font-mono text-xs">
+                  <li>
+                    <a href="#" class="text-purple-400 hover:underline">CVE-2024-1001 : SQL Injection (Lu)</a>
+                  </li>
+                  <li>
+                    <a href="#" class="text-purple-400 hover:underline">CVE-2024-1002 : XSS Stored (Lu)</a>
+                  </li>
+                  <li>
+                    <a href="#" class="text-blue-400 hover:underline">CVE-2024-1003 : Buffer Overflow (Nouveau)</a>
+                  </li>
+                </ul>
+                <p class="mt-2 text-xs text-zinc-500 italic">
+                  (Les liens violets indiquent les rapports déjà traités).
                 </p>
               </div>
 
@@ -143,24 +176,24 @@ const activeTab = ref('preview')
           </div>
 
           <div v-else>
-            <pre
-              class="rounded-xl bg-zinc-950 p-5 overflow-x-auto text-sm text-zinc-100"
-            >
-<code>&lt;!-- Sécurité : rel="noopener noreferrer" est CRITIQUE avec target="_blank" --&gt;
-&lt;!-- Accessibilité : Ajouter une mention textuelle ou une icône --&gt;
+            <pre class="rounded-xl bg-zinc-950 p-5 overflow-x-auto text-sm text-zinc-100">
+<code>/* CSS pour gérer l'historique de navigation */
 
-&lt;a href=&quot;charte.pdf&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;
-  Charte Informatique
-  &lt;!-- Option A : Texte caché pour screen reader --&gt;
-  &lt;span class=&quot;sr-only&quot;&gt;(nouvelle fenêtre)&lt;/span&gt;
-  
-  &lt;!-- Option B : Icône visible --&gt;
-  &lt;svg class=&quot;icon-new-window&quot; aria-hidden=&quot;true&quot;&gt;...&lt;/svg&gt;
-&lt;/a&gt;</code>
-</pre>
-            <p class="mt-3 text-xs text-zinc-500">
-              Le <code>rel="noopener"</code> empêche la nouvelle page d'avoir accès à l'objet <code>window.opener</code>, bloquant ainsi les attaques de type "Reverse Tabnabbing" où un site malveillant redirige la page d'origine vers une fausse page de login.
-            </p>
+/* Lien standard (non visité) */
+a {
+  color: #60a5fa; /* Bleu */
+  text-decoration: none;
+}
+
+/* Lien déjà visité par l'utilisateur */
+a:visited {
+  color: #c084fc; /* Violet */
+}
+
+/* Interaction */
+a:hover {
+  text-decoration: underline;
+}</code></pre>
           </div>
         </div>
       </div>
@@ -169,24 +202,10 @@ const activeTab = ref('preview')
 
   <section v-else class="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-6">
     <h1 class="text-lg font-semibold text-zinc-100">Règle introuvable</h1>
-    <p class="mt-2 text-sm text-zinc-400">
-      Vérifiez que la règle existe dans
-      <code class="text-zinc-300">rules.json</code>.
-    </p>
   </section>
 </template>
 
 <style scoped>
-/* Classe utilitaire pour cacher du texte visuellement mais le garder pour les lecteurs d'écran */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
-}
+.scrollbar-light { scrollbar-color: transparent transparent; border-radius: 4px; }
+.scrollbar-light:hover { scrollbar-color: #a3a3a3 transparent; }
 </style>

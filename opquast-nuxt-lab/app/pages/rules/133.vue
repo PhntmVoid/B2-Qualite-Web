@@ -36,6 +36,10 @@ const activeTab = ref('preview')
           {{ tag }}
         </span>
       </div>
+      
+      <div v-if="rule.authors && rule.authors.length" class="text-sm text-zinc-400">
+        Écrit par <span class="text-zinc-300">{{ rule.authors.join(', ') }}</span>
+      </div>
     </header>
 
     <section class="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-6">
@@ -67,36 +71,50 @@ const activeTab = ref('preview')
         <li v-for="c in rule.control" :key="c">{{ c }}</li>
       </ul>
     </section>
+    
+    <section class="space-y-4">
+      <h2 class="text-lg font-semibold tracking-tight text-zinc-100">Screenshots</h2>
+      <div class="flex gap-4 overflow-x-auto pb-4 scrollbar-light">
+        
+        <div class="shrink-0 w-[280px] sm:w-[340px]">
+          <div class="aspect-[16/10] rounded-2xl border border-green-900/30 bg-green-900/10 overflow-hidden flex items-center justify-center relative group">
+            <a href="/screenshots/rule-133/SCREEN1.png" target="_blank" class="block cursor-zoom-in w-full h-full">
+              <img src="/screenshots/rule-133/SCREEN1.png" alt="Bonne pratique" class="h-full w-full object-cover transition-transform group-hover:scale-105" />
+            </a>
+            <div class="absolute bottom-2 right-2 bg-green-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow">BON EXEMPLE</div>
+          </div>
+          <div class="mt-2 text-xs text-zinc-400 font-medium">Capture : Correspondance 1 pour 1</div>
+        </div>
+
+        <div class="shrink-0 w-[280px] sm:w-[340px]">
+          <div class="aspect-[16/10] rounded-2xl border border-red-900/30 bg-red-900/10 overflow-hidden flex items-center justify-center relative group">
+            <a href="/screenshots/rule-133/SCREEN2.png" target="_blank" class="block cursor-zoom-in w-full h-full">
+              <img src="/screenshots/rule-133/SCREEN2.png" alt="Mauvaise pratique" class="h-full w-full object-cover transition-transform group-hover:scale-105" />
+            </a>
+            <div class="absolute bottom-2 right-2 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow">MAUVAIS EXEMPLE</div>
+          </div>
+          <div class="mt-2 text-xs text-zinc-400 font-medium">Capture : Redirection vers l'accueil</div>
+        </div>
+
+      </div>
+    </section>
 
     <section class="space-y-4">
       <h2 class="text-lg font-semibold tracking-tight text-zinc-100">
         Exemples
       </h2>
 
-      <div
-        class="rounded-2xl border border-zinc-800 bg-zinc-900/30 overflow-hidden"
-      >
+      <div class="rounded-2xl border border-zinc-800 bg-zinc-900/30 overflow-hidden">
         <div class="flex border-b border-zinc-800">
           <button
             @click="activeTab = 'preview'"
-            :class="[
-              'px-5 py-3 text-sm transition',
-              activeTab === 'preview'
-                ? 'text-zinc-100 border-b-2 border-zinc-100'
-                : 'text-zinc-400 hover:text-zinc-200',
-            ]"
+            :class="['px-5 py-3 text-sm transition', activeTab === 'preview' ? 'text-zinc-100 border-b-2 border-zinc-100' : 'text-zinc-400 hover:text-zinc-200']"
           >
             Rendu
           </button>
-
           <button
             @click="activeTab = 'code'"
-            :class="[
-              'px-5 py-3 text-sm transition',
-              activeTab === 'code'
-                ? 'text-zinc-100 border-b-2 border-zinc-100'
-                : 'text-zinc-400 hover:text-zinc-200',
-            ]"
+            :class="['px-5 py-3 text-sm transition', activeTab === 'code' ? 'text-zinc-100 border-b-2 border-zinc-100' : 'text-zinc-400 hover:text-zinc-200']"
           >
             Code
           </button>
@@ -105,65 +123,70 @@ const activeTab = ref('preview')
         <div class="p-6">
           <div v-if="activeTab === 'preview'" class="space-y-6">
             <div class="text-sm text-zinc-400">
-              Démonstration de la cohérence : tous les liens présents dans le
-              paragraphe (corps de texte) partagent strictement le même style
-              (couleur indigo + soulignement léger).
+              Simulation de la navigation lors d'un changement de langue.
             </div>
 
-            <div class="rounded-xl border border-zinc-800 bg-zinc-950 p-6">
-              <h3 class="text-zinc-100 font-semibold mb-3">
-                Rapport d'audit de sécurité
-              </h3>
-              <p class="text-zinc-300 text-sm leading-7">
-                L'analyse des journaux a révélé plusieurs anomalies. Nous avons
-                d'abord examiné les
-                <a
-                  href="#"
-                  class="text-indigo-400 underline decoration-indigo-400/30 hover:decoration-indigo-400 transition"
-                  >règles du pare-feu périmétrique</a
-                >
-                pour vérifier les ports ouverts. Ensuite, nous avons audité la
-                <a
-                  href="#"
-                  class="text-indigo-400 underline decoration-indigo-400/30 hover:decoration-indigo-400 transition"
-                  >politique de mots de passe</a
-                >
-                des comptes administrateurs. Enfin, une vérification croisée avec
-                les
-                <a
-                  href="#"
-                  class="text-indigo-400 underline decoration-indigo-400/30 hover:decoration-indigo-400 transition"
-                  >logs d'accès SSH</a
-                >
-                a permis d'identifier une tentative d'intrusion.
-              </p>
+            <div class="grid gap-6 md:grid-cols-2">
+              
+              <div class="rounded-xl border border-red-900/30 bg-red-950/5 p-5">
+                <div class="flex items-center gap-2 mb-3 text-red-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                  <span class="text-xs font-bold uppercase tracking-wide">Redirection Accueil</span>
+                </div>
+                
+                <div class="bg-zinc-900 rounded p-3 text-xs font-mono text-zinc-400 mb-3 border border-zinc-800">
+                  URL actuelle : <span class="text-zinc-200">/fr/blog/cyber-attack-2024</span>
+                </div>
+
+                <div class="flex items-center gap-2">
+                  <span class="text-sm text-zinc-300">Changer de langue :</span>
+                  <a href="#" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs text-white border border-red-500/50">
+                    English ➔ <span class="text-red-300">/en/home</span>
+                  </a>
+                </div>
+                <p class="mt-2 text-xs text-zinc-500 italic">
+                  (L'utilisateur perd l'article qu'il lisait et doit le rechercher).
+                </p>
+              </div>
+
+              <div class="rounded-xl border border-green-900/30 bg-green-950/5 p-5">
+                <div class="flex items-center gap-2 mb-3 text-green-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                  <span class="text-xs font-bold uppercase tracking-wide">Traduction Directe</span>
+                </div>
+                
+                <div class="bg-zinc-900 rounded p-3 text-xs font-mono text-zinc-400 mb-3 border border-zinc-800">
+                  URL actuelle : <span class="text-zinc-200">/fr/blog/cyber-attack-2024</span>
+                </div>
+
+                <div class="flex items-center gap-2">
+                  <span class="text-sm text-zinc-300">Changer de langue :</span>
+                  <a href="#" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs text-white border border-green-500/50">
+                    English ➔ <span class="text-green-300">/en/blog/cyber-attack-2024</span>
+                  </a>
+                </div>
+                <p class="mt-2 text-xs text-zinc-500 italic">
+                  (L'utilisateur reste sur le même contenu, traduit).
+                </p>
+              </div>
+
             </div>
           </div>
 
           <div v-else>
-            <pre
-              class="rounded-xl bg-zinc-950 p-5 overflow-x-auto text-sm text-zinc-100"
-            >
-<code>&lt;!-- Utilisation d'une classe utilitaire identique pour tous les liens de même nature --&gt;
-&lt;style&gt;
-  .link-text {
-    @apply text-indigo-400 underline decoration-indigo-400/30 hover:decoration-indigo-400;
-  }
-&lt;/style&gt;
+            <pre class="rounded-xl bg-zinc-950 p-5 overflow-x-auto text-sm text-zinc-100">
+<code>&lt;!-- MAUVAIS : Lien générique vers l'accueil --&gt;
+&lt;a href=&quot;/en/home&quot;&gt;English version&lt;/a&gt;
 
-&lt;p&gt;
-  Nous avons examiné les 
-  &lt;a href=&quot;#&quot; class=&quot;link-text&quot;&gt;règles du pare-feu&lt;/a&gt;, 
-  puis la 
-  &lt;a href=&quot;#&quot; class=&quot;link-text&quot;&gt;politique de mots de passe&lt;/a&gt; 
-  et enfin les 
-  &lt;a href=&quot;#&quot; class=&quot;link-text&quot;&gt;logs SSH&lt;/a&gt;.
-&lt;/p&gt;</code>
-</pre>
-            <p class="mt-3 text-xs text-zinc-500">
-              Cette cohérence permet à l'œil de scanner rapidement le texte et
-              d'identifier immédiatement les ressources liées sans effort cognitif.
-            </p>
+
+&lt;!-- BON : Lien dynamique vers l'équivalent de la page --&gt;
+&lt;!-- Exemple en Nuxt.js / Vue --&gt;
+&lt;NuxtLink :to=&quot;switchLocalePath('en')&quot;&gt;
+  English version
+&lt;/NuxtLink&gt;
+
+&lt;!-- Résultat HTML attendu sur la page 'contact' --&gt;
+&lt;a href=&quot;/en/contact&quot;&gt;English version&lt;/a&gt;</code></pre>
           </div>
         </div>
       </div>
@@ -172,9 +195,10 @@ const activeTab = ref('preview')
 
   <section v-else class="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-6">
     <h1 class="text-lg font-semibold text-zinc-100">Règle introuvable</h1>
-    <p class="mt-2 text-sm text-zinc-400">
-      Vérifiez que la règle existe dans
-      <code class="text-zinc-300">rules.json</code>.
-    </p>
   </section>
 </template>
+
+<style scoped>
+.scrollbar-light { scrollbar-color: transparent transparent; border-radius: 4px; }
+.scrollbar-light:hover { scrollbar-color: #a3a3a3 transparent; }
+</style>

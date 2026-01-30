@@ -36,6 +36,10 @@ const activeTab = ref('preview')
           {{ tag }}
         </span>
       </div>
+      
+      <div v-if="rule.authors && rule.authors.length" class="text-sm text-zinc-400">
+        Écrit par <span class="text-zinc-300">{{ rule.authors.join(', ') }}</span>
+      </div>
     </header>
 
     <section class="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-6">
@@ -67,36 +71,50 @@ const activeTab = ref('preview')
         <li v-for="c in rule.control" :key="c">{{ c }}</li>
       </ul>
     </section>
+    
+    <section class="space-y-4">
+      <h2 class="text-lg font-semibold tracking-tight text-zinc-100">Screenshots</h2>
+      <div class="flex gap-4 overflow-x-auto pb-4 scrollbar-light">
+        
+        <div class="shrink-0 w-[280px] sm:w-[340px]">
+          <div class="aspect-[16/10] rounded-2xl border border-green-900/30 bg-green-900/10 overflow-hidden flex items-center justify-center relative group">
+            <a href="/screenshots/rule-132/SCREEN1.png" target="_blank" class="block cursor-zoom-in w-full h-full">
+              <img src="/screenshots/rule-132/SCREEN1.png" alt="Bonne pratique" class="h-full w-full object-cover transition-transform group-hover:scale-105" />
+            </a>
+            <div class="absolute bottom-2 right-2 bg-green-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow">BON EXEMPLE</div>
+          </div>
+          <div class="mt-2 text-xs text-zinc-400 font-medium">Capture : Exemple conforme</div>
+        </div>
+
+        <div class="shrink-0 w-[280px] sm:w-[340px]">
+          <div class="aspect-[16/10] rounded-2xl border border-red-900/30 bg-red-900/10 overflow-hidden flex items-center justify-center relative group">
+            <a href="/screenshots/rule-132/SCREEN2.png" target="_blank" class="block cursor-zoom-in w-full h-full">
+              <img src="/screenshots/rule-132/SCREEN2.png" alt="Mauvaise pratique" class="h-full w-full object-cover transition-transform group-hover:scale-105" />
+            </a>
+            <div class="absolute bottom-2 right-2 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow">MAUVAIS EXEMPLE</div>
+          </div>
+          <div class="mt-2 text-xs text-zinc-400 font-medium">Capture : Exemple à éviter</div>
+        </div>
+
+      </div>
+    </section>
 
     <section class="space-y-4">
       <h2 class="text-lg font-semibold tracking-tight text-zinc-100">
-        Exemples
+        Exemples (Code)
       </h2>
 
-      <div
-        class="rounded-2xl border border-zinc-800 bg-zinc-900/30 overflow-hidden"
-      >
+      <div class="rounded-2xl border border-zinc-800 bg-zinc-900/30 overflow-hidden">
         <div class="flex border-b border-zinc-800">
           <button
             @click="activeTab = 'preview'"
-            :class="[
-              'px-5 py-3 text-sm transition',
-              activeTab === 'preview'
-                ? 'text-zinc-100 border-b-2 border-zinc-100'
-                : 'text-zinc-400 hover:text-zinc-200',
-            ]"
+            :class="['px-5 py-3 text-sm transition', activeTab === 'preview' ? 'text-zinc-100 border-b-2 border-zinc-100' : 'text-zinc-400 hover:text-zinc-200']"
           >
             Rendu
           </button>
-
           <button
             @click="activeTab = 'code'"
-            :class="[
-              'px-5 py-3 text-sm transition',
-              activeTab === 'code'
-                ? 'text-zinc-100 border-b-2 border-zinc-100'
-                : 'text-zinc-400 hover:text-zinc-200',
-            ]"
+            :class="['px-5 py-3 text-sm transition', activeTab === 'code' ? 'text-zinc-100 border-b-2 border-zinc-100' : 'text-zinc-400 hover:text-zinc-200']"
           >
             Code
           </button>
@@ -105,55 +123,57 @@ const activeTab = ref('preview')
         <div class="p-6">
           <div v-if="activeTab === 'preview'" class="space-y-6">
             <div class="text-sm text-zinc-400">
-              Comparaison entre un lien non explicite (pattern souvent utilisé en phishing) et un lien explicite (bonne pratique).
+              Illustration de l'impact sur un lecteur d'écran (simulé).
             </div>
 
             <div class="grid gap-6 md:grid-cols-2">
-              <div class="rounded-xl border border-red-900/50 bg-red-950/10 p-5">
+              
+              <div class="rounded-xl border border-red-900/30 bg-red-950/5 p-5">
                 <div class="flex items-center gap-2 mb-3 text-red-400">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-                  <span class="font-semibold text-sm">À éviter (Ambigu)</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                  <span class="text-xs font-bold uppercase tracking-wide">Sans attribut langue</span>
                 </div>
-                <p class="text-sm text-zinc-300 leading-relaxed">
-                  Une vulnérabilité critique a été détectée dans le module SSH.
-                  Pour en savoir plus sur le correctif, 
-                  <a href="#" class="text-blue-400 underline hover:text-blue-300">cliquez ici</a>.
+                <p class="text-zinc-300 font-serif italic mb-2">
+                  "Le nouveau malware utilise une approche <span class="text-red-300">fileless</span> pour s'exécuter."
                 </p>
+                <div class="text-xs text-zinc-500 border-t border-red-900/20 pt-2">
+                  <span class="font-mono">Lecteur d'écran :</span> Prononcera "fileless" avec un accent français horrible ("file-lesse"), le rendant incompréhensible.
+                </div>
               </div>
 
-              <div class="rounded-xl border border-emerald-900/50 bg-emerald-950/10 p-5">
-                <div class="flex items-center gap-2 mb-3 text-emerald-400">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                  <span class="font-semibold text-sm">Recommandé (Explicite)</span>
+              <div class="rounded-xl border border-green-900/30 bg-green-950/5 p-5">
+                <div class="flex items-center gap-2 mb-3 text-green-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                  <span class="text-xs font-bold uppercase tracking-wide">Avec attribut lang="en"</span>
                 </div>
-                <p class="text-sm text-zinc-300 leading-relaxed">
-                  Une vulnérabilité critique a été détectée dans le module SSH.
-                  Veuillez consulter la 
-                  <a href="#" class="text-blue-400 underline hover:text-blue-300">note de version du patch CVE-2024-34</a>.
+                <p class="text-zinc-300 font-serif italic mb-2">
+                  "Le nouveau malware utilise une approche <span class="text-green-300" lang="en">fileless</span> pour s'exécuter."
                 </p>
+                <div class="text-xs text-zinc-500 border-t border-green-900/20 pt-2">
+                  <span class="font-mono">Lecteur d'écran :</span> Basculera automatiquement sur la voix anglaise pour prononcer correctement "fileless".
+                </div>
               </div>
+
             </div>
           </div>
 
           <div v-else>
-            <pre
-              class="rounded-xl bg-zinc-950 p-5 overflow-x-auto text-sm text-zinc-100"
-            >
-<code>&lt;!-- MAUVAIS : "cliquez ici" force l'utilisateur à lire tout le contexte --&gt;
+            <pre class="rounded-xl bg-zinc-950 p-5 overflow-x-auto text-sm text-zinc-100">
+<code>&lt;!-- MAUVAIS : Aucune indication de langue --&gt;
 &lt;p&gt;
-  Pour en savoir plus sur le correctif, 
-  &lt;a href=&quot;patch-note.html&quot;&gt;cliquez ici&lt;/a&gt;.
+  La devise du hacker est : Trust no one.
 &lt;/p&gt;
 
-&lt;!-- BON : Le lien est compréhensible même hors contexte (lecteur d'écran) --&gt;
+&lt;!-- BON : Changement de langue signalé --&gt;
 &lt;p&gt;
-  Veuillez consulter la 
-  &lt;a href=&quot;patch-note.html&quot;&gt;note de version du patch CVE-2024-34&lt;/a&gt;.
-&lt;/p&gt;</code>
-</pre>
-            <p class="mt-3 text-xs text-zinc-500">
-              En cybersécurité, des liens explicites permettent aussi de vérifier la destination avant de cliquer, réduisant les risques d'ingénierie sociale.
-            </p>
+  La devise du hacker est : 
+  &lt;span lang=&quot;en&quot;&gt;Trust no one&lt;/span&gt;.
+&lt;/p&gt;
+
+&lt;!-- Variante pour une citation longue --&gt;
+&lt;blockquote lang=&quot;en&quot;&gt;
+  Security is a process, not a product.
+&lt;/blockquote&gt;</code></pre>
           </div>
         </div>
       </div>
@@ -162,9 +182,10 @@ const activeTab = ref('preview')
 
   <section v-else class="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-6">
     <h1 class="text-lg font-semibold text-zinc-100">Règle introuvable</h1>
-    <p class="mt-2 text-sm text-zinc-400">
-      Vérifiez que la règle existe dans
-      <code class="text-zinc-300">rules.json</code>.
-    </p>
   </section>
 </template>
+
+<style scoped>
+.scrollbar-light { scrollbar-color: transparent transparent; border-radius: 4px; }
+.scrollbar-light:hover { scrollbar-color: #a3a3a3 transparent; }
+</style>

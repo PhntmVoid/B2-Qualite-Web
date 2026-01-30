@@ -36,6 +36,10 @@ const activeTab = ref('preview')
           {{ tag }}
         </span>
       </div>
+      
+      <div v-if="rule.authors && rule.authors.length" class="text-sm text-zinc-400">
+        Écrit par <span class="text-zinc-300">{{ rule.authors.join(', ') }}</span>
+      </div>
     </header>
 
     <section class="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-6">
@@ -67,36 +71,50 @@ const activeTab = ref('preview')
         <li v-for="c in rule.control" :key="c">{{ c }}</li>
       </ul>
     </section>
+    
+    <section class="space-y-4">
+      <h2 class="text-lg font-semibold tracking-tight text-zinc-100">Screenshots</h2>
+      <div class="flex gap-4 overflow-x-auto pb-4 scrollbar-light">
+        
+        <div class="shrink-0 w-[280px] sm:w-[340px]">
+          <div class="aspect-[16/10] rounded-2xl border border-green-900/30 bg-green-900/10 overflow-hidden flex items-center justify-center relative group">
+            <a href="/screenshots/rule-138/SCREEN1.png" target="_blank" class="block cursor-zoom-in w-full h-full">
+              <img src="/screenshots/rule-138/SCREEN1.png" alt="Bonne pratique" class="h-full w-full object-cover transition-transform group-hover:scale-105" />
+            </a>
+            <div class="absolute bottom-2 right-2 bg-green-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow">BON EXEMPLE</div>
+          </div>
+          <div class="mt-2 text-xs text-zinc-400 font-medium">Capture : Design System cohérent</div>
+        </div>
+
+        <div class="shrink-0 w-[280px] sm:w-[340px]">
+          <div class="aspect-[16/10] rounded-2xl border border-red-900/30 bg-red-900/10 overflow-hidden flex items-center justify-center relative group">
+            <a href="/screenshots/rule-138/SCREEN2.png" target="_blank" class="block cursor-zoom-in w-full h-full">
+              <img src="/screenshots/rule-138/SCREEN2.png" alt="Mauvaise pratique" class="h-full w-full object-cover transition-transform group-hover:scale-105" />
+            </a>
+            <div class="absolute bottom-2 right-2 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow">MAUVAIS EXEMPLE</div>
+          </div>
+          <div class="mt-2 text-xs text-zinc-400 font-medium">Capture : Incohérence graphique</div>
+        </div>
+
+      </div>
+    </section>
 
     <section class="space-y-4">
       <h2 class="text-lg font-semibold tracking-tight text-zinc-100">
         Exemples
       </h2>
 
-      <div
-        class="rounded-2xl border border-zinc-800 bg-zinc-900/30 overflow-hidden"
-      >
+      <div class="rounded-2xl border border-zinc-800 bg-zinc-900/30 overflow-hidden">
         <div class="flex border-b border-zinc-800">
           <button
             @click="activeTab = 'preview'"
-            :class="[
-              'px-5 py-3 text-sm transition',
-              activeTab === 'preview'
-                ? 'text-zinc-100 border-b-2 border-zinc-100'
-                : 'text-zinc-400 hover:text-zinc-200',
-            ]"
+            :class="['px-5 py-3 text-sm transition', activeTab === 'preview' ? 'text-zinc-100 border-b-2 border-zinc-100' : 'text-zinc-400 hover:text-zinc-200']"
           >
             Rendu
           </button>
-
           <button
             @click="activeTab = 'code'"
-            :class="[
-              'px-5 py-3 text-sm transition',
-              activeTab === 'code'
-                ? 'text-zinc-100 border-b-2 border-zinc-100'
-                : 'text-zinc-400 hover:text-zinc-200',
-            ]"
+            :class="['px-5 py-3 text-sm transition', activeTab === 'code' ? 'text-zinc-100 border-b-2 border-zinc-100' : 'text-zinc-400 hover:text-zinc-200']"
           >
             Code
           </button>
@@ -105,53 +123,87 @@ const activeTab = ref('preview')
         <div class="p-6">
           <div v-if="activeTab === 'preview'" class="space-y-6">
             <div class="text-sm text-zinc-400">
-              Sur un portail interne, distinction immédiate entre les pages publiques et les zones d'administration nécessitant une élévation de privilèges.
+              Dans un tableau de bord, l'utilisateur s'attend à ce que les actions (Modifier, Supprimer) soient toujours au même endroit et aient la même apparence.
             </div>
 
-            <div class="rounded-xl border border-zinc-800 bg-zinc-950 p-6 space-y-5">
+            <div class="grid gap-6 md:grid-cols-2">
               
-              <div>
-                <a href="#" class="block group">
-                  <span class="text-zinc-200 font-medium group-hover:text-blue-400 transition-colors">
-                    Politique de sécurité (PSSI)
-                  </span>
-                  <span class="block text-xs text-zinc-500 mt-0.5">
-                    Accès : Tout le personnel
-                  </span>
-                </a>
+              <div class="rounded-xl border border-red-900/30 bg-red-950/5 p-5">
+                <div class="flex items-center gap-2 mb-3 text-red-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                  <span class="text-xs font-bold uppercase tracking-wide">Incohérence (Confusion)</span>
+                </div>
+                
+                <div class="space-y-3">
+                  <div class="flex items-center justify-between p-2 bg-zinc-900 rounded border border-zinc-800">
+                    <span class="text-zinc-300 text-xs">Serveur Alpha</span>
+                    <a href="#" class="text-blue-400 text-xs hover:underline">Modifier</a>
+                  </div>
+                  <div class="flex items-center justify-between p-2 bg-zinc-900 rounded border border-zinc-800">
+                    <span class="text-zinc-300 text-xs">Serveur Beta</span>
+                    <button class="bg-zinc-700 text-white text-xs px-2 py-0.5 rounded">Éditer</button>
+                  </div>
+                  <div class="flex items-center justify-between p-2 bg-zinc-900 rounded border border-zinc-800">
+                    <span class="text-zinc-300 text-xs">Serveur Gamma</span>
+                    <a href="#" class="text-zinc-500 hover:text-zinc-100 text-xs">settings_icon</a>
+                  </div>
+                </div>
+                <p class="mt-2 text-xs text-zinc-500 italic">
+                  (L'utilisateur doit chercher comment modifier à chaque ligne).
+                </p>
               </div>
 
-              <div class="h-px bg-zinc-900 w-full"></div>
-
-              <div>
-                 <a href="#" class="flex items-center gap-2 group text-amber-500 hover:text-amber-400 transition-colors">
-                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                   <span class="font-medium">Console d'administration IAM</span>
-                 </a>
-                 <span class="block text-xs text-zinc-500 mt-1 ml-6">
-                    Accès : Administrateurs uniquement (MFA requis)
-                 </span>
+              <div class="rounded-xl border border-green-900/30 bg-green-950/5 p-5">
+                <div class="flex items-center gap-2 mb-3 text-green-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                  <span class="text-xs font-bold uppercase tracking-wide">Cohérence (Apprentissage rapide)</span>
+                </div>
+                
+                <div class="space-y-3">
+                  <div class="flex items-center justify-between p-2 bg-zinc-900 rounded border border-zinc-800">
+                    <span class="text-zinc-300 text-xs">Serveur Alpha</span>
+                    <a href="#" class="text-blue-400 text-xs hover:text-blue-300 transition-colors">Modifier</a>
+                  </div>
+                  <div class="flex items-center justify-between p-2 bg-zinc-900 rounded border border-zinc-800">
+                    <span class="text-zinc-300 text-xs">Serveur Beta</span>
+                    <a href="#" class="text-blue-400 text-xs hover:text-blue-300 transition-colors">Modifier</a>
+                  </div>
+                  <div class="flex items-center justify-between p-2 bg-zinc-900 rounded border border-zinc-800">
+                    <span class="text-zinc-300 text-xs">Serveur Gamma</span>
+                    <a href="#" class="text-blue-400 text-xs hover:text-blue-300 transition-colors">Modifier</a>
+                  </div>
+                </div>
+                <p class="mt-2 text-xs text-zinc-500 italic">
+                  (Le cerveau repère immédiatement le pattern bleu à droite).
+                </p>
               </div>
 
             </div>
           </div>
 
           <div v-else>
-            <pre
-              class="rounded-xl bg-zinc-950 p-5 overflow-x-auto text-sm text-zinc-100"
-            >
-<code>&lt;!-- Lien standard --&gt;
-&lt;a href=&quot;/pssi&quot;&gt;Politique de sécurité&lt;/a&gt;
+            <pre class="rounded-xl bg-zinc-950 p-5 overflow-x-auto text-sm text-zinc-100">
+<code>&lt;!-- MAUVAIS : Mélange de styles et de balises pour la même action --&gt;
+&lt;a href=&quot;...&quot; style=&quot;color: blue&quot;&gt;Modifier&lt;/a&gt;
+&lt;button class=&quot;btn-grey&quot;&gt;Éditer&lt;/button&gt;
+&lt;i class=&quot;icon-settings&quot;&gt;&lt;/i&gt;
 
-&lt;!-- Lien restreint : Couleur spécifique (Amber/Red) + Icône Cadenas --&gt;
-&lt;a href=&quot;/admin/iam&quot; class=&quot;text-amber-500&quot;&gt;
-  &lt;svg class=&quot;icon-lock&quot;&gt;...&lt;/svg&gt;
-  Console d'administration IAM
-&lt;/a&gt;</code>
-</pre>
-            <p class="mt-3 text-xs text-zinc-500">
-              Cette signalétique permet à l'utilisateur d'anticiper une demande d'authentification forte ou un refus d'accès.
-            </p>
+&lt;!-- BON : Utilisation d'une classe CSS unique et sémantique --&gt;
+&lt;a href=&quot;...&quot; class=&quot;action-link&quot;&gt;Modifier&lt;/a&gt;
+&lt;a href=&quot;...&quot; class=&quot;action-link&quot;&gt;Modifier&lt;/a&gt;
+&lt;a href=&quot;...&quot; class=&quot;action-link&quot;&gt;Modifier&lt;/a&gt;
+
+&lt;style&gt;
+/* Centralisation du style */
+.action-link {
+  color: #60a5fa; /* blue-400 */
+  font-size: 0.75rem;
+  text-decoration: none;
+}
+.action-link:hover {
+  color: #93c5fd; /* blue-300 */
+}
+&lt;/style&gt;</code></pre>
           </div>
         </div>
       </div>
@@ -160,9 +212,10 @@ const activeTab = ref('preview')
 
   <section v-else class="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-6">
     <h1 class="text-lg font-semibold text-zinc-100">Règle introuvable</h1>
-    <p class="mt-2 text-sm text-zinc-400">
-      Vérifiez que la règle existe dans
-      <code class="text-zinc-300">rules.json</code>.
-    </p>
   </section>
 </template>
+
+<style scoped>
+.scrollbar-light { scrollbar-color: transparent transparent; border-radius: 4px; }
+.scrollbar-light:hover { scrollbar-color: #a3a3a3 transparent; }
+</style>

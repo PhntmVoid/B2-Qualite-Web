@@ -36,6 +36,10 @@ const activeTab = ref('preview')
           {{ tag }}
         </span>
       </div>
+      
+      <div v-if="rule.authors && rule.authors.length" class="text-sm text-zinc-400">
+        Écrit par <span class="text-zinc-300">{{ rule.authors.join(', ') }}</span>
+      </div>
     </header>
 
     <section class="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-6">
@@ -67,36 +71,50 @@ const activeTab = ref('preview')
         <li v-for="c in rule.control" :key="c">{{ c }}</li>
       </ul>
     </section>
+    
+    <section class="space-y-4">
+      <h2 class="text-lg font-semibold tracking-tight text-zinc-100">Screenshots</h2>
+      <div class="flex gap-4 overflow-x-auto pb-4 scrollbar-light">
+        
+        <div class="shrink-0 w-[280px] sm:w-[340px]">
+          <div class="aspect-[16/10] rounded-2xl border border-green-900/30 bg-green-900/10 overflow-hidden flex items-center justify-center relative group">
+            <a href="/screenshots/rule-136/SCREEN1.png" target="_blank" class="block cursor-zoom-in w-full h-full">
+              <img src="/screenshots/rule-136/SCREEN1.png" alt="Bonne pratique" class="h-full w-full object-cover transition-transform group-hover:scale-105" />
+            </a>
+            <div class="absolute bottom-2 right-2 bg-green-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow">BON EXEMPLE</div>
+          </div>
+          <div class="mt-2 text-xs text-zinc-400 font-medium">Capture : Bouton avec texte caché ou Aria</div>
+        </div>
+
+        <div class="shrink-0 w-[280px] sm:w-[340px]">
+          <div class="aspect-[16/10] rounded-2xl border border-red-900/30 bg-red-900/10 overflow-hidden flex items-center justify-center relative group">
+            <a href="/screenshots/rule-136/SCREEN2.png" target="_blank" class="block cursor-zoom-in w-full h-full">
+              <img src="/screenshots/rule-136/SCREEN2.png" alt="Mauvaise pratique" class="h-full w-full object-cover transition-transform group-hover:scale-105" />
+            </a>
+            <div class="absolute bottom-2 right-2 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow">MAUVAIS EXEMPLE</div>
+          </div>
+          <div class="mt-2 text-xs text-zinc-400 font-medium">Capture : Lien vide (icône seule sans alt)</div>
+        </div>
+
+      </div>
+    </section>
 
     <section class="space-y-4">
       <h2 class="text-lg font-semibold tracking-tight text-zinc-100">
         Exemples
       </h2>
 
-      <div
-        class="rounded-2xl border border-zinc-800 bg-zinc-900/30 overflow-hidden"
-      >
+      <div class="rounded-2xl border border-zinc-800 bg-zinc-900/30 overflow-hidden">
         <div class="flex border-b border-zinc-800">
           <button
             @click="activeTab = 'preview'"
-            :class="[
-              'px-5 py-3 text-sm transition',
-              activeTab === 'preview'
-                ? 'text-zinc-100 border-b-2 border-zinc-100'
-                : 'text-zinc-400 hover:text-zinc-200',
-            ]"
+            :class="['px-5 py-3 text-sm transition', activeTab === 'preview' ? 'text-zinc-100 border-b-2 border-zinc-100' : 'text-zinc-400 hover:text-zinc-200']"
           >
             Rendu
           </button>
-
           <button
             @click="activeTab = 'code'"
-            :class="[
-              'px-5 py-3 text-sm transition',
-              activeTab === 'code'
-                ? 'text-zinc-100 border-b-2 border-zinc-100'
-                : 'text-zinc-400 hover:text-zinc-200',
-            ]"
+            :class="['px-5 py-3 text-sm transition', activeTab === 'code' ? 'text-zinc-100 border-b-2 border-zinc-100' : 'text-zinc-400 hover:text-zinc-200']"
           >
             Code
           </button>
@@ -105,60 +123,84 @@ const activeTab = ref('preview')
         <div class="p-6">
           <div v-if="activeTab === 'preview'" class="space-y-6">
             <div class="text-sm text-zinc-400">
-              Simulation visuelle : Le lien "Guide Linux" a déjà été cliqué (couleur violette), indiquant à l'utilisateur qu'il a déjà consulté cette ressource.
+              Cas classique des boutons d'action (icônes) dans une interface d'administration ou un dashboard Cyber.
             </div>
 
-            <div class="rounded-xl border border-zinc-800 bg-zinc-950 p-6">
-              <h3 class="text-zinc-100 font-medium mb-4">Guides de durcissement (CIS Benchmarks)</h3>
+            <div class="grid gap-6 md:grid-cols-2">
               
-              <ul class="space-y-4">
-                <li class="flex items-start gap-3">
-                  <div class="mt-1 w-1.5 h-1.5 rounded-full bg-blue-500"></div>
-                  <div>
-                    <a href="#" class="text-blue-400 hover:underline block font-medium">
-                      Guide de durcissement Windows Server 2022
-                    </a>
-                    <p class="text-xs text-zinc-500 mt-0.5">Non consulté</p>
-                  </div>
-                </li>
+              <div class="rounded-xl border border-red-900/30 bg-red-950/5 p-5">
+                <div class="flex items-center gap-2 mb-3 text-red-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                  <span class="text-xs font-bold uppercase tracking-wide">Lien vide</span>
+                </div>
+                
+                <div class="flex gap-2">
+                  <a href="#" class="flex items-center justify-center w-10 h-10 bg-zinc-800 rounded hover:bg-zinc-700 border border-red-500/30">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  </a>
+                </div>
+                <div class="mt-3 bg-zinc-900 p-2 rounded text-xs font-mono text-zinc-500">
+                   Code: &lt;a href="..."&gt;&lt;svg&gt;...&lt;/svg&gt;&lt;/a&gt;
+                </div>
+                <p class="mt-2 text-xs text-zinc-500 italic">
+                  Lecteur d'écran : "Lien, lien, lien..." (ne dit pas ce que ça fait).
+                </p>
+              </div>
 
-                <li class="flex items-start gap-3">
-                  <div class="mt-1 w-1.5 h-1.5 rounded-full bg-purple-500"></div>
-                  <div>
-                    <a href="#" class="text-purple-400 hover:underline block font-medium">
-                      Guide de durcissement Ubuntu Linux 22.04 LTS
-                    </a>
-                    <p class="text-xs text-zinc-500 mt-0.5">Déjà consulté</p>
-                  </div>
-                </li>
-              </ul>
+              <div class="rounded-xl border border-green-900/30 bg-green-950/5 p-5">
+                <div class="flex items-center gap-2 mb-3 text-green-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                  <span class="text-xs font-bold uppercase tracking-wide">Avec texte caché</span>
+                </div>
+                
+                <div class="flex gap-2">
+                  <a href="#" class="flex items-center justify-center w-10 h-10 bg-zinc-800 rounded hover:bg-zinc-700 border border-green-500/30 group relative">
+                     <span class="sr-only">Télécharger le rapport d'incident</span>
+                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  </a>
+                </div>
+                <div class="mt-3 bg-zinc-900 p-2 rounded text-xs font-mono text-zinc-500">
+                   Code: &lt;a&gt;&lt;span class="sr-only"&gt;Télécharger...&lt;/span&gt;&lt;svg&gt;...&lt;/a&gt;
+                </div>
+                <p class="mt-2 text-xs text-zinc-500 italic">
+                  Lecteur d'écran : "Télécharger le rapport d'incident".
+                </p>
+              </div>
+
             </div>
           </div>
 
           <div v-else>
-            <pre
-              class="rounded-xl bg-zinc-950 p-5 overflow-x-auto text-sm text-zinc-100"
-            >
-<code>/* CSS : Utilisation de la pseudo-classe :visited */
+            <pre class="rounded-xl bg-zinc-950 p-5 overflow-x-auto text-sm text-zinc-100">
+<code>&lt;!-- MAUVAIS : Lien vide (uniquement décoratif pour une machine) --&gt;
+&lt;a href=&quot;delete.php?id=12&quot; class=&quot;btn-icon&quot;&gt;
+  &lt;i class=&quot;fa fa-trash&quot;&gt;&lt;/i&gt;
+&lt;/a&gt;
 
-/* État par défaut (Non visité) */
-a.doc-link {
-  color: #60a5fa; /* Blue-400 */
-  text-decoration: none;
+&lt;!-- BON : Texte accessible (masqué visuellement via CSS) --&gt;
+&lt;a href=&quot;delete.php?id=12&quot; class=&quot;btn-icon&quot;&gt;
+  &lt;span class=&quot;sr-only&quot;&gt;Supprimer l'incident&lt;/span&gt;
+  &lt;i class=&quot;fa fa-trash&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;
+&lt;/a&gt;
+
+&lt;!-- Alternative : Aria-label --&gt;
+&lt;a href=&quot;settings&quot; aria-label=&quot;Paramètres du compte&quot;&gt;
+  &lt;svg&gt;...&lt;/svg&gt;
+&lt;/a&gt;
+
+&lt;style&gt;
+/* Classe standard pour cacher du texte tout en le laissant accessible */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
 }
-
-/* État visité (Déjà cliqué) */
-a.doc-link:visited {
-  color: #c084fc; /* Purple-400 */
-}
-
-a.doc-link:hover {
-  text-decoration: underline;
-}</code>
-</pre>
-            <p class="mt-3 text-xs text-zinc-500">
-              Note technique : Pour des raisons de confidentialité (protection de l'historique utilisateur), les navigateurs modernes limitent les propriétés CSS modifiables via <code>:visited</code> (principalement la couleur).
-            </p>
+&lt;/style&gt;</code></pre>
           </div>
         </div>
       </div>
@@ -167,9 +209,11 @@ a.doc-link:hover {
 
   <section v-else class="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-6">
     <h1 class="text-lg font-semibold text-zinc-100">Règle introuvable</h1>
-    <p class="mt-2 text-sm text-zinc-400">
-      Vérifiez que la règle existe dans
-      <code class="text-zinc-300">rules.json</code>.
-    </p>
   </section>
 </template>
+
+<style scoped>
+.scrollbar-light { scrollbar-color: transparent transparent; border-radius: 4px; }
+.scrollbar-light:hover { scrollbar-color: #a3a3a3 transparent; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0; }
+</style>

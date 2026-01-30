@@ -36,6 +36,10 @@ const activeTab = ref('preview')
           {{ tag }}
         </span>
       </div>
+      
+      <div v-if="rule.authors && rule.authors.length" class="text-sm text-zinc-400">
+        Écrit par <span class="text-zinc-300">{{ rule.authors.join(', ') }}</span>
+      </div>
     </header>
 
     <section class="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-6">
@@ -67,36 +71,50 @@ const activeTab = ref('preview')
         <li v-for="c in rule.control" :key="c">{{ c }}</li>
       </ul>
     </section>
+    
+    <section class="space-y-4">
+      <h2 class="text-lg font-semibold tracking-tight text-zinc-100">Screenshots</h2>
+      <div class="flex gap-4 overflow-x-auto pb-4 scrollbar-light">
+        
+        <div class="shrink-0 w-[280px] sm:w-[340px]">
+          <div class="aspect-[16/10] rounded-2xl border border-green-900/30 bg-green-900/10 overflow-hidden flex items-center justify-center relative group">
+            <a href="/screenshots/rule-139/SCREEN1.png" target="_blank" class="block cursor-zoom-in w-full h-full">
+              <img src="/screenshots/rule-139/SCREEN1.png" alt="Bonne pratique" class="h-full w-full object-cover transition-transform group-hover:scale-105" />
+            </a>
+            <div class="absolute bottom-2 right-2 bg-green-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow">BON EXEMPLE</div>
+          </div>
+          <div class="mt-2 text-xs text-zinc-400 font-medium">Capture : Gras pour l'emphase, Souligné pour le lien</div>
+        </div>
+
+        <div class="shrink-0 w-[280px] sm:w-[340px]">
+          <div class="aspect-[16/10] rounded-2xl border border-red-900/30 bg-red-900/10 overflow-hidden flex items-center justify-center relative group">
+            <a href="/screenshots/rule-139/SCREEN2.png" target="_blank" class="block cursor-zoom-in w-full h-full">
+              <img src="/screenshots/rule-139/SCREEN2.png" alt="Mauvaise pratique" class="h-full w-full object-cover transition-transform group-hover:scale-105" />
+            </a>
+            <div class="absolute bottom-2 right-2 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow">MAUVAIS EXEMPLE</div>
+          </div>
+          <div class="mt-2 text-xs text-zinc-400 font-medium">Capture : Texte souligné non cliquable</div>
+        </div>
+
+      </div>
+    </section>
 
     <section class="space-y-4">
       <h2 class="text-lg font-semibold tracking-tight text-zinc-100">
         Exemples
       </h2>
 
-      <div
-        class="rounded-2xl border border-zinc-800 bg-zinc-900/30 overflow-hidden"
-      >
+      <div class="rounded-2xl border border-zinc-800 bg-zinc-900/30 overflow-hidden">
         <div class="flex border-b border-zinc-800">
           <button
             @click="activeTab = 'preview'"
-            :class="[
-              'px-5 py-3 text-sm transition',
-              activeTab === 'preview'
-                ? 'text-zinc-100 border-b-2 border-zinc-100'
-                : 'text-zinc-400 hover:text-zinc-200',
-            ]"
+            :class="['px-5 py-3 text-sm transition', activeTab === 'preview' ? 'text-zinc-100 border-b-2 border-zinc-100' : 'text-zinc-400 hover:text-zinc-200']"
           >
             Rendu
           </button>
-
           <button
             @click="activeTab = 'code'"
-            :class="[
-              'px-5 py-3 text-sm transition',
-              activeTab === 'code'
-                ? 'text-zinc-100 border-b-2 border-zinc-100'
-                : 'text-zinc-400 hover:text-zinc-200',
-            ]"
+            :class="['px-5 py-3 text-sm transition', activeTab === 'code' ? 'text-zinc-100 border-b-2 border-zinc-100' : 'text-zinc-400 hover:text-zinc-200']"
           >
             Code
           </button>
@@ -105,52 +123,60 @@ const activeTab = ref('preview')
         <div class="p-6">
           <div v-if="activeTab === 'preview'" class="space-y-6">
             <div class="text-sm text-zinc-400">
-              Différence entre un lien vague et un lien explicite qui prévient l'utilisateur de l'action système (ouverture du client mail).
+              Testez votre réflexe de clic sur ces deux exemples.
             </div>
 
-            <div class="space-y-6">
-              <div class="rounded-xl border border-zinc-800 bg-zinc-950 p-5">
-                <p class="text-xs text-red-400 font-semibold uppercase mb-2">Mauvais (L'utilisateur ne sait pas ce qui va se passer)</p>
-                <div class="p-4 bg-zinc-900 rounded border border-zinc-800">
-                    <p class="text-zinc-300">
-                        Vous avez détecté une activité suspecte ?
-                        <a href="mailto:soc@company.com" class="text-blue-400 underline">Contactez-nous</a>.
-                    </p>
+            <div class="grid gap-6 md:grid-cols-2">
+              
+              <div class="rounded-xl border border-red-900/30 bg-red-950/5 p-5">
+                <div class="flex items-center gap-2 mb-3 text-red-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                  <span class="text-xs font-bold uppercase tracking-wide">Faux liens (Confusion)</span>
                 </div>
+                
+                <div class="p-4 bg-zinc-900 rounded border border-zinc-800">
+                   <p class="text-zinc-300 text-sm leading-relaxed">
+                     <span class="underline decoration-zinc-400 cursor-default">Note importante :</span> Le service sera indisponible ce soir. Veuillez ne pas <span class="underline decoration-zinc-400 cursor-default">fermer votre session</span> avant la fin de la sauvegarde.
+                   </p>
+                </div>
+                <p class="mt-2 text-xs text-zinc-500 italic">
+                  (On a envie de cliquer sur "fermer votre session", mais ce n'est que du texte).
+                </p>
               </div>
 
-              <div class="rounded-xl border border-zinc-800 bg-zinc-950 p-5">
-                <p class="text-xs text-green-400 font-semibold uppercase mb-2">Bon (Action explicite)</p>
-                <div class="p-4 bg-zinc-900 rounded border border-zinc-800">
-                    <p class="text-zinc-300 mb-3">
-                        Vous avez détecté une activité suspecte ?
-                    </p>
-                    <a href="mailto:soc@company.com" class="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 border border-zinc-600 rounded text-zinc-100 transition-colors text-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                        Envoyer un mail à l'équipe SOC
-                    </a>
+              <div class="rounded-xl border border-green-900/30 bg-green-950/5 p-5">
+                <div class="flex items-center gap-2 mb-3 text-green-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                  <span class="text-xs font-bold uppercase tracking-wide">Usage correct</span>
                 </div>
+                
+                <div class="p-4 bg-zinc-900 rounded border border-zinc-800">
+                   <p class="text-zinc-300 text-sm leading-relaxed">
+                     <strong class="text-amber-400 font-semibold">Note importante :</strong> Le service sera indisponible ce soir. Pour plus de détails, consultez le <a href="#" class="text-blue-400 underline hover:text-blue-300">planning de maintenance</a>.
+                   </p>
+                </div>
+                <p class="mt-2 text-xs text-zinc-500 italic">
+                  (Le seul élément souligné est le lien, l'emphase est faite avec du gras/couleur).
+                </p>
               </div>
+
             </div>
           </div>
 
           <div v-else>
-            <pre
-              class="rounded-xl bg-zinc-950 p-5 overflow-x-auto text-sm text-zinc-100"
-            >
-<code>&lt;!-- ❌ Mauvais : "Contactez-nous" masque le protocole mailto: --&gt;
-&lt;a href=&quot;mailto:soc@company.com&quot;&gt;Contactez-nous&lt;/a&gt;
+            <pre class="rounded-xl bg-zinc-950 p-5 overflow-x-auto text-sm text-zinc-100">
+<code>&lt;!-- MAUVAIS : Utilisation de &lt;u&gt; ou CSS underline pour l'emphase --&gt;
+&lt;p&gt;
+  Veuillez &lt;u&gt;ne pas éteindre&lt;/u&gt; votre ordinateur.
+&lt;/p&gt;
 
-
-&lt;!-- ✅ Bon : Le libellé annonce l'action d'envoi d'email --&gt;
-&lt;a href=&quot;mailto:soc@company.com&quot;&gt;
-  &lt;svg&gt;...&lt;/svg&gt;
-  Envoyer un mail à l'équipe SOC
-&lt;/a&gt;</code>
-</pre>
-            <p class="mt-3 text-xs text-zinc-500">
-              Cela s'applique aussi aux liens <code>webcal:</code> (ajouter au calendrier) ou <code>skype:</code>.
-            </p>
+&lt;!-- BON : Utilisation de &lt;strong&gt; ou CSS bold --&gt;
+&lt;p&gt;
+  Veuillez &lt;strong&gt;ne pas éteindre&lt;/strong&gt; votre ordinateur.
+&lt;/p&gt;
+&lt;p&gt;
+  En cas de problème, contactez le &lt;a href=&quot;...&quot;&gt;support&lt;/a&gt;.
+&lt;/p&gt;</code></pre>
           </div>
         </div>
       </div>
@@ -159,9 +185,10 @@ const activeTab = ref('preview')
 
   <section v-else class="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-6">
     <h1 class="text-lg font-semibold text-zinc-100">Règle introuvable</h1>
-    <p class="mt-2 text-sm text-zinc-400">
-      Vérifiez que la règle existe dans
-      <code class="text-zinc-300">rules.json</code>.
-    </p>
   </section>
 </template>
+
+<style scoped>
+.scrollbar-light { scrollbar-color: transparent transparent; border-radius: 4px; }
+.scrollbar-light:hover { scrollbar-color: #a3a3a3 transparent; }
+</style>

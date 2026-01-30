@@ -36,6 +36,10 @@ const activeTab = ref('preview')
           {{ tag }}
         </span>
       </div>
+      
+      <div v-if="rule.authors && rule.authors.length" class="text-sm text-zinc-400">
+        Écrit par <span class="text-zinc-300">{{ rule.authors.join(', ') }}</span>
+      </div>
     </header>
 
     <section class="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-6">
@@ -67,36 +71,50 @@ const activeTab = ref('preview')
         <li v-for="c in rule.control" :key="c">{{ c }}</li>
       </ul>
     </section>
+    
+    <section class="space-y-4">
+      <h2 class="text-lg font-semibold tracking-tight text-zinc-100">Screenshots</h2>
+      <div class="flex gap-4 overflow-x-auto pb-4 scrollbar-light">
+        
+        <div class="shrink-0 w-[280px] sm:w-[340px]">
+          <div class="aspect-[16/10] rounded-2xl border border-green-900/30 bg-green-900/10 overflow-hidden flex items-center justify-center relative group">
+            <a href="/screenshots/rule-135/SCREEN1.png" target="_blank" class="block cursor-zoom-in w-full h-full">
+              <img src="/screenshots/rule-135/SCREEN1.png" alt="Bonne pratique" class="h-full w-full object-cover transition-transform group-hover:scale-105" />
+            </a>
+            <div class="absolute bottom-2 right-2 bg-green-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow">BON EXEMPLE</div>
+          </div>
+          <div class="mt-2 text-xs text-zinc-400 font-medium">Capture : Détection auto (Google/Microsoft)</div>
+        </div>
+
+        <div class="shrink-0 w-[280px] sm:w-[340px]">
+          <div class="aspect-[16/10] rounded-2xl border border-red-900/30 bg-red-900/10 overflow-hidden flex items-center justify-center relative group">
+            <a href="/screenshots/rule-135/SCREEN2.png" target="_blank" class="block cursor-zoom-in w-full h-full">
+              <img src="/screenshots/rule-135/SCREEN2.png" alt="Mauvaise pratique" class="h-full w-full object-cover transition-transform group-hover:scale-105" />
+            </a>
+            <div class="absolute bottom-2 right-2 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow">MAUVAIS EXEMPLE</div>
+          </div>
+          <div class="mt-2 text-xs text-zinc-400 font-medium">Capture : Langue par défaut imposée</div>
+        </div>
+
+      </div>
+    </section>
 
     <section class="space-y-4">
       <h2 class="text-lg font-semibold tracking-tight text-zinc-100">
         Exemples
       </h2>
 
-      <div
-        class="rounded-2xl border border-zinc-800 bg-zinc-900/30 overflow-hidden"
-      >
+      <div class="rounded-2xl border border-zinc-800 bg-zinc-900/30 overflow-hidden">
         <div class="flex border-b border-zinc-800">
           <button
             @click="activeTab = 'preview'"
-            :class="[
-              'px-5 py-3 text-sm transition',
-              activeTab === 'preview'
-                ? 'text-zinc-100 border-b-2 border-zinc-100'
-                : 'text-zinc-400 hover:text-zinc-200',
-            ]"
+            :class="['px-5 py-3 text-sm transition', activeTab === 'preview' ? 'text-zinc-100 border-b-2 border-zinc-100' : 'text-zinc-400 hover:text-zinc-200']"
           >
             Rendu
           </button>
-
           <button
             @click="activeTab = 'code'"
-            :class="[
-              'px-5 py-3 text-sm transition',
-              activeTab === 'code'
-                ? 'text-zinc-100 border-b-2 border-zinc-100'
-                : 'text-zinc-400 hover:text-zinc-200',
-            ]"
+            :class="['px-5 py-3 text-sm transition', activeTab === 'code' ? 'text-zinc-100 border-b-2 border-zinc-100' : 'text-zinc-400 hover:text-zinc-200']"
           >
             Code
           </button>
@@ -105,49 +123,73 @@ const activeTab = ref('preview')
         <div class="p-6">
           <div v-if="activeTab === 'preview'" class="space-y-6">
             <div class="text-sm text-zinc-400">
-              Sur mobile ou tablette (pas de survol possible), les liens non différenciés sont invisibles. Testez la différence ci-dessous.
+              Simulation de la négociation de contenu entre le navigateur (Client) et le Serveur.
             </div>
 
-            <div class="space-y-6">
-              <div class="rounded-xl border border-red-900/30 bg-red-950/5 p-5 opacity-75">
-                <div class="flex justify-between items-center mb-2">
-                    <span class="text-xs font-medium text-red-400 uppercase">Mauvais (Lien invisible sans survol)</span>
-                    <span class="text-[10px] text-zinc-500 border border-zinc-800 px-2 py-0.5 rounded">Simulez le mobile (pas de souris)</span>
+            <div class="grid gap-6 md:grid-cols-2">
+              
+              <div class="rounded-xl border border-red-900/30 bg-red-950/5 p-5">
+                <div class="flex items-center gap-2 mb-3 text-red-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                  <span class="text-xs font-bold uppercase tracking-wide">Serveur sourd</span>
                 </div>
-                <p class="text-zinc-300">
-                  Pour sécuriser votre compte, activez le <a href="#" class="text-zinc-300 hover:text-blue-400 hover:underline cursor-pointer font-normal">MFA dans les paramètres</a> dès que possible.
-                  (Essayez de trouver le lien sans passer la souris dessus !)
-                </p>
+                
+                <div class="space-y-3 font-mono text-xs">
+                  <div class="bg-zinc-900 p-2 rounded border border-zinc-800">
+                    <span class="text-zinc-500">CLIENT ></span> GET /home<br>
+                    <span class="text-blue-300">Accept-Language: fr-FR, fr;q=0.9</span>
+                  </div>
+                  <div class="flex justify-center text-zinc-600">⬇️</div>
+                  <div class="bg-red-900/20 p-2 rounded border border-red-900/50">
+                    <span class="text-zinc-500">SERVER ></span> 200 OK<br>
+                    <span class="text-red-300">Content-Language: en-US</span><br>
+                    <span class="text-zinc-400 italic">// Ignore la demande et sert l'anglais</span>
+                  </div>
+                </div>
               </div>
 
               <div class="rounded-xl border border-green-900/30 bg-green-950/5 p-5">
-                <div class="mb-2 text-xs font-medium text-green-400 uppercase">Bon (Lien visible par défaut)</div>
-                <p class="text-zinc-300">
-                  Pour sécuriser votre compte, activez le <a href="#" class="text-blue-400 underline decoration-blue-400/50 hover:text-blue-300">MFA dans les paramètres</a> dès que possible.
-                </p>
+                <div class="flex items-center gap-2 mb-3 text-green-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                  <span class="text-xs font-bold uppercase tracking-wide">Négociation réussie</span>
+                </div>
+                
+                <div class="space-y-3 font-mono text-xs">
+                  <div class="bg-zinc-900 p-2 rounded border border-zinc-800">
+                    <span class="text-zinc-500">CLIENT ></span> GET /home<br>
+                    <span class="text-blue-300">Accept-Language: fr-FR, fr;q=0.9</span>
+                  </div>
+                  <div class="flex justify-center text-zinc-600">⬇️</div>
+                  <div class="bg-green-900/20 p-2 rounded border border-green-900/50">
+                    <span class="text-zinc-500">SERVER ></span> 200 OK<br>
+                    <span class="text-green-300">Content-Language: fr-FR</span><br>
+                    <span class="text-zinc-400 italic">// Sert la version française</span>
+                  </div>
+                </div>
               </div>
+
             </div>
           </div>
 
           <div v-else>
-            <pre
-              class="rounded-xl bg-zinc-950 p-5 overflow-x-auto text-sm text-zinc-100"
-            >
-<code>&lt;!-- ❌ MAUVAIS : Le lien a la même couleur que le texte --&gt;
-&lt;!-- Il ne change qu'au survol (hover), ce qui ne marche pas sur mobile --&gt;
-&lt;a href=&quot;#&quot; class=&quot;text-zinc-300 hover:text-blue-400&quot;&gt;
-  MFA dans les paramètres
-&lt;/a&gt;
+            <pre class="rounded-xl bg-zinc-950 p-5 overflow-x-auto text-sm text-zinc-100">
+<code># Exemple de configuration (Nginx) pour gérer l'Accept-Language
 
-&lt;!-- ✅ BON : Le lien se distingue par la couleur ET/OU le soulignement --&gt;
-&lt;!-- Accessible immédiatement, quel que soit le périphérique --&gt;
-&lt;a href=&quot;#&quot; class=&quot;text-blue-400 underline&quot;&gt;
-  MFA dans les paramètres
-&lt;/a&gt;</code>
-</pre>
-            <p class="mt-3 text-xs text-zinc-500">
-              Note : Le contraste de couleur doit être d'au moins 3:1 par rapport au texte environnant si le soulignement n'est pas utilisé.
-            </p>
+map $http_accept_language $lang {
+    default en;
+    ~fr fr;
+    ~es es;
+}
+
+server {
+    location / {
+        # Redirection vers la langue détectée
+        rewrite ^/$ /$lang/ redirect;
+    }
+}
+
+# Résultat :
+# Si le header contient "fr-FR", le serveur redirige vers /fr/</code></pre>
           </div>
         </div>
       </div>
@@ -156,9 +198,10 @@ const activeTab = ref('preview')
 
   <section v-else class="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-6">
     <h1 class="text-lg font-semibold text-zinc-100">Règle introuvable</h1>
-    <p class="mt-2 text-sm text-zinc-400">
-      Vérifiez que la règle existe dans
-      <code class="text-zinc-300">rules.json</code>.
-    </p>
   </section>
 </template>
+
+<style scoped>
+.scrollbar-light { scrollbar-color: transparent transparent; border-radius: 4px; }
+.scrollbar-light:hover { scrollbar-color: #a3a3a3 transparent; }
+</style>

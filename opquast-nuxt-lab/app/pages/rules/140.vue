@@ -36,6 +36,10 @@ const activeTab = ref('preview')
           {{ tag }}
         </span>
       </div>
+      
+      <div v-if="rule.authors && rule.authors.length" class="text-sm text-zinc-400">
+        Écrit par <span class="text-zinc-300">{{ rule.authors.join(', ') }}</span>
+      </div>
     </header>
 
     <section class="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-6">
@@ -67,36 +71,50 @@ const activeTab = ref('preview')
         <li v-for="c in rule.control" :key="c">{{ c }}</li>
       </ul>
     </section>
+    
+    <section class="space-y-4">
+      <h2 class="text-lg font-semibold tracking-tight text-zinc-100">Screenshots</h2>
+      <div class="flex gap-4 overflow-x-auto pb-4 scrollbar-light">
+        
+        <div class="shrink-0 w-[280px] sm:w-[340px]">
+          <div class="aspect-[16/10] rounded-2xl border border-green-900/30 bg-green-900/10 overflow-hidden flex items-center justify-center relative group">
+            <a href="/screenshots/rule-140/SCREEN1.png" target="_blank" class="block cursor-zoom-in w-full h-full">
+              <img src="/screenshots/rule-140/SCREEN1.png" alt="Bonne pratique" class="h-full w-full object-cover transition-transform group-hover:scale-105" />
+            </a>
+            <div class="absolute bottom-2 right-2 bg-green-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow">BON EXEMPLE</div>
+          </div>
+          <div class="mt-2 text-xs text-zinc-400 font-medium">Capture : Liens soulignés par défaut</div>
+        </div>
+
+        <div class="shrink-0 w-[280px] sm:w-[340px]">
+          <div class="aspect-[16/10] rounded-2xl border border-red-900/30 bg-red-900/10 overflow-hidden flex items-center justify-center relative group">
+            <a href="/screenshots/rule-140/SCREEN2.png" target="_blank" class="block cursor-zoom-in w-full h-full">
+              <img src="/screenshots/rule-140/SCREEN2.png" alt="Mauvaise pratique" class="h-full w-full object-cover transition-transform group-hover:scale-105" />
+            </a>
+            <div class="absolute bottom-2 right-2 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow">MAUVAIS EXEMPLE</div>
+          </div>
+          <div class="mt-2 text-xs text-zinc-400 font-medium">Capture : Liens invisibles sans survol</div>
+        </div>
+
+      </div>
+    </section>
 
     <section class="space-y-4">
       <h2 class="text-lg font-semibold tracking-tight text-zinc-100">
         Exemples
       </h2>
 
-      <div
-        class="rounded-2xl border border-zinc-800 bg-zinc-900/30 overflow-hidden"
-      >
+      <div class="rounded-2xl border border-zinc-800 bg-zinc-900/30 overflow-hidden">
         <div class="flex border-b border-zinc-800">
           <button
             @click="activeTab = 'preview'"
-            :class="[
-              'px-5 py-3 text-sm transition',
-              activeTab === 'preview'
-                ? 'text-zinc-100 border-b-2 border-zinc-100'
-                : 'text-zinc-400 hover:text-zinc-200',
-            ]"
+            :class="['px-5 py-3 text-sm transition', activeTab === 'preview' ? 'text-zinc-100 border-b-2 border-zinc-100' : 'text-zinc-400 hover:text-zinc-200']"
           >
             Rendu
           </button>
-
           <button
             @click="activeTab = 'code'"
-            :class="[
-              'px-5 py-3 text-sm transition',
-              activeTab === 'code'
-                ? 'text-zinc-100 border-b-2 border-zinc-100'
-                : 'text-zinc-400 hover:text-zinc-200',
-            ]"
+            :class="['px-5 py-3 text-sm transition', activeTab === 'code' ? 'text-zinc-100 border-b-2 border-zinc-100' : 'text-zinc-400 hover:text-zinc-200']"
           >
             Code
           </button>
@@ -105,47 +123,64 @@ const activeTab = ref('preview')
         <div class="p-6">
           <div v-if="activeTab === 'preview'" class="space-y-6">
             <div class="text-sm text-zinc-400">
-              Dans une procédure d'urgence (type Playbook Ransomware), le numéro de l'astreinte doit être immédiatement actionnable depuis un mobile.
+              Essayez de trouver les liens sans passer la souris dessus (simulation tablette/mobile).
             </div>
 
-            <div class="rounded-xl border border-red-900/40 bg-red-950/10 p-6 max-w-md mx-auto sm:mx-0">
-              <div class="flex items-start justify-between">
-                <div>
-                  <h3 class="text-red-400 font-bold flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                    Astreinte SOC N2
-                  </h3>
-                  <p class="text-xs text-zinc-400 mt-1">Disponible 24/7 pour P1/P0</p>
-                </div>
-              </div>
+            <div class="grid gap-6 md:grid-cols-2">
               
-              <div class="mt-6">
-                 <a href="tel:+33612345678" class="flex items-center justify-center gap-2 w-full bg-red-600 hover:bg-red-500 text-white font-medium py-3 px-4 rounded-lg transition-colors shadow-lg shadow-red-900/20">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                    Appeler l'astreinte
-                 </a>
-                 <div class="text-center mt-2">
-                    <span class="text-xs text-zinc-500 font-mono">+33 6 12 34 56 78</span>
-                 </div>
+              <div class="rounded-xl border border-red-900/30 bg-red-950/5 p-5">
+                <div class="flex items-center gap-2 mb-3 text-red-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                  <span class="text-xs font-bold uppercase tracking-wide">Invisible</span>
+                </div>
+                
+                <div class="p-4 bg-zinc-900 rounded border border-zinc-800">
+                   <p class="text-zinc-300 text-sm leading-relaxed">
+                     L'attaque a exploité une faille Zero-Day. Le correctif est disponible <a href="#" class="text-zinc-300 hover:text-blue-400 hover:underline cursor-pointer font-normal transition-all">sur ce serveur</a> depuis ce matin. Veuillez l'appliquer immédiatement.
+                   </p>
+                </div>
+                <p class="mt-2 text-xs text-zinc-500 italic">
+                  (Le lien "sur ce serveur" est invisible tant qu'on ne passe pas la souris dessus).
+                </p>
               </div>
+
+              <div class="rounded-xl border border-green-900/30 bg-green-950/5 p-5">
+                <div class="flex items-center gap-2 mb-3 text-green-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                  <span class="text-xs font-bold uppercase tracking-wide">Visible</span>
+                </div>
+                
+                <div class="p-4 bg-zinc-900 rounded border border-zinc-800">
+                   <p class="text-zinc-300 text-sm leading-relaxed">
+                     L'attaque a exploité une faille Zero-Day. Le correctif est disponible <a href="#" class="text-blue-400 underline decoration-blue-400/50 hover:text-blue-300">sur ce serveur</a> depuis ce matin. Veuillez l'appliquer immédiatement.
+                   </p>
+                </div>
+                <p class="mt-2 text-xs text-zinc-500 italic">
+                  (Le lien est évident grâce à la couleur et au soulignement).
+                </p>
+              </div>
+
             </div>
           </div>
 
           <div v-else>
-            <pre
-              class="rounded-xl bg-zinc-950 p-5 overflow-x-auto text-sm text-zinc-100"
-            >
-<code>&lt;!-- Format international (+33) obligatoire pour la compatibilité --&gt;
-&lt;a href=&quot;tel:+33612345678&quot; class=&quot;btn-alert&quot;&gt;
-  &lt;icon-phone /&gt; Appeler l'astreinte
-&lt;/a&gt;
+            <pre class="rounded-xl bg-zinc-950 p-5 overflow-x-auto text-sm text-zinc-100">
+<code>&lt;!-- MAUVAIS : Lien camouflé (design minimaliste extrême) --&gt;
+&lt;style&gt;
+  a.stealth {
+    color: inherit;
+    text-decoration: none;
+  }
+  a.stealth:hover {
+    color: blue;
+    text-decoration: underline;
+  }
+&lt;/style&gt;
 
-&lt;!-- Afficher aussi le numéro en clair pour les PC de bureau sans VoIP --&gt;
-&lt;span&gt;+33 6 12 34 56 78&lt;/span&gt;</code>
-</pre>
-            <p class="mt-3 text-xs text-zinc-500">
-              Sur mobile, cela déclenche le "dialer". Sur Desktop, cela peut ouvrir Skype, Teams ou un softphone VoIP si configuré.
-            </p>
+&lt;!-- BON : Lien standard et visible --&gt;
+&lt;a href=&quot;patch.zip&quot; class=&quot;text-blue-400 underline&quot;&gt;
+  Télécharger le correctif
+&lt;/a&gt;</code></pre>
           </div>
         </div>
       </div>
@@ -154,9 +189,10 @@ const activeTab = ref('preview')
 
   <section v-else class="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-6">
     <h1 class="text-lg font-semibold text-zinc-100">Règle introuvable</h1>
-    <p class="mt-2 text-sm text-zinc-400">
-      Vérifiez que la règle existe dans
-      <code class="text-zinc-300">rules.json</code>.
-    </p>
   </section>
 </template>
+
+<style scoped>
+.scrollbar-light { scrollbar-color: transparent transparent; border-radius: 4px; }
+.scrollbar-light:hover { scrollbar-color: #a3a3a3 transparent; }
+</style>
