@@ -393,6 +393,9 @@
       "Vérifier la présence d'une procédure permettant la création d'un nouveau mot de passe sur la page pointée par le lien « Mot de passe oublié ? » ;",
       "Vérifier qu'il s'agit bien d'une procédure de réinitialisation et non pas d'un simple renvoi du mot de passe actuel."
     ],
-    "screenshotsSources": []
+    "screenshotsSources": [
+      "https://www.bershka.com/fr/h-man.html",
+      "https://www.bershka.com/fr/h-man.html"
+    ]
   }
 ]
