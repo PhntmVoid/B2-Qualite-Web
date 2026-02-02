@@ -667,6 +667,117 @@
       "Vérifier la présence de la légende si un symbole est utilisé.",
       "Vérifier la présence de l'attribut 'required' dans le code source."
     ],
+    "screenshotsSources": []
+  },
+  {
+    "id": 131,
+    "title": "La langue principale de la page cible d'un lien est identifiable lorsqu'elle diffère de celle de la page d'origine.",
+    "authors": ["ROMAIN DANIEL"],
+    "path": "/rules/131",
+    "description": "Arriver par surprise sur une page en klingon quand on ne parle pas cette langue n’est jamais très agréable. Peu d’informations permettent aux internautes de savoir ce qui se cache derrière un lien. Toutes les informations qui vont être transmises avant le clic sont donc de nature à limiter les clics inutiles. La langue en est une qui gagne à être précisée à l’avance.",
+    "tags": ["Accessibilité", "Contenus", "Liens", "Internationalisation"],
+    "objectives": [
+      "Permettre à l'utilisateur d'anticiper la langue du contenu vers lequel il se dirige.",
+      "Éviter la frustration d'ouvrir une page incompréhensible.",
+      "Améliorer l'accessibilité pour les utilisateurs naviguant avec des lecteurs d'écran."
+    ],
+    "implementationIntro": "",
+    "implementation": [
+      "Indiquer la langue de la cible via une mention textuelle (ex: [en], [pdf en anglais]) ou une icône explicite.",
+      "Utiliser l'attribut hreflang sur la balise a pour les robots, mais ne pas s'y fier pour l'affichage visuel."
+    ],
+    "control": [
+      "Vérifier que tout lien menant vers une page dans une langue différente possède une indication visible avant le clic.",
+      "Contrôler la pertinence de l'information (ne pas indiquer [en] si la page est en français)."
+    ],
+    "screenshotsSources": []
+  },
+  {
+    "id": 132,
+    "title": "Chaque changement de langue est signalé.",
+    "authors": ["ROMAIN DANIEL"],
+    "path": "/rules/132",
+    "description": "Les outils automatiques et les robots qui parcourent vos contenus ne peuvent pas forcément en deviner la langue principale ni ses éventuelles variations. La présence d’un terme en langue étrangère dans une page peut et doit être signalé.",
+    "tags": ["Accessibilité", "Développement", "Contenus", "Internationalisation"],
+    "objectives": [
+      "Permettre aux synthèses vocales de prononcer correctement les passages en langue étrangère.",
+      "Permettre aux outils de traduction de traiter correctement les contenus.",
+      "Faciliter l'indexation par les moteurs de recherche."
+    ],
+    "implementationIntro": "",
+    "implementation": [
+      "Utiliser l'attribut lang sur les balises HTML entourant le contenu en langue étrangère (span, q, blockquote, div, etc.)."
+    ],
+    "control": [
+      "Identifier les changements de langue dans le contenu.",
+      "Vérifier la présence de l'attribut lang approprié sur l'élément conteneur."
+    ],
+    "screenshotsSources": []
+  },
+  {
+    "id": 133,
+    "title": "Les liens d'accès aux versions traduites pointent directement vers la traduction de la page courante.",
+    "authors": ["ROMAIN DANIEL"],
+    "path": "/rules/133",
+    "description": "En matière d’internationalisation, cette bonne pratique représente le confort ultime. Sur chaque page, vous pouvez directement cliquer sur le lien de changement de langue et c’est la page traduite qui apparaît. C’est intéressant pour l’internaute et c’est également très pratique pour le contrôle des traductions.",
+    "tags": ["Accessibilité", "Internationalisation", "Navigation", "UX"],
+    "objectives": [
+      "Permettre à l'utilisateur de changer de langue sans perdre le fil de sa navigation.",
+      "Éviter de forcer l'utilisateur à rechercher à nouveau la page qu'il consultait après avoir changé de langue."
+    ],
+    "implementationIntro": "",
+    "implementation": [
+      "Configurer le système de gestion de contenu (CMS) pour lier les pages traduites entre elles.",
+      "Générer dynamiquement le lien de changement de langue en fonction de l'URL courante (ex: /fr/contact -> /en/contact)."
+    ],
+    "control": [
+      "Se rendre sur une page profonde du site (pas l'accueil).",
+      "Changer de langue via le sélecteur.",
+      "Vérifier que l'on atterrit bien sur la version traduite de cette même page, et non sur l'accueil."
+    ],
+    "screenshotsSources": []
+  },
+  {
+    "id": 134,
+    "title": "Les liens vers les versions équivalentes des contenus sont rédigés dans leur langue cible.",
+    "authors": ["ROMAIN DANIEL"],
+    "path": "/rules/134",
+    "description": "Si vous faites un lien vers une page en hongrois, il y a de fortes chances que cette page s’adresse à des lecteurs qui comprennent le hongrois. Faites donc un libellé de lien en hongrois. Et ô merveille, ça marche aussi pour les autres langues.",
+    "tags": ["Accessibilité", "Internationalisation", "Éditorial", "UX"],
+    "objectives": [
+      "Permettre à un utilisateur ne maîtrisant pas la langue courante de trouver facilement sa propre langue.",
+      "Améliorer la navigation internationale."
+    ],
+    "implementationIntro": "",
+    "implementation": [
+      "Rédiger l'intitulé du lien dans la langue de destination (ex: 'English' au lieu de 'Anglais', 'Deutsch' au lieu de 'Allemand').",
+      "Respecter la casse et les caractères spéciaux de la langue cible (ex: '日本語' pour le Japonais)."
+    ],
+    "control": [
+      "Vérifier le menu de choix de langue.",
+      "S'assurer que chaque langue est nommée dans sa propre langue (autonyme)."
+    ],
+    "screenshotsSources": []
+  },
+  {
+    "id": 135,
+    "title": "Le serveur respecte l'ordre préférentiel de langues des outils de consultation.",
+    "authors": ["ROMAIN DANIEL"],
+    "path": "/rules/135",
+    "description": "Chaque requête auprès d’un serveur peut comporter des informations concernant les préférences de langue. Chaque internaute peut classer ses langues préférées dans son navigateur. Le serveur doit proposer les contenus en respectant l’ordre demandé par l’utilisateur. Si celui-ci indique le français, puis l’espagnol, puis l’anglais, le serveur devra servir la page en français si elle existe, sinon en espagnol si elle existe, et sinon en anglais si elle existe.",
+    "tags": ["Développement", "Serveur", "Internationalisation", "HTTP"],
+    "objectives": [
+      "Servir automatiquement le contenu dans la langue préférée de l'utilisateur sans action de sa part.",
+      "Améliorer l'expérience utilisateur dès la première visite."
+    ],
+    "implementationIntro": "",
+    "implementation": [
+      "Configurer le serveur (Apache, Nginx) ou le backend pour lire l'en-tête HTTP 'Accept-Language'.",
+      "Implémenter une logique de négociation de contenu pour servir la langue correspondante disponible."
+    ],
+    "control": [
+      "Configurer son navigateur pour demander une langue spécifique (ex: Espagnol).",
+      "Accéder au site et vérifier qu'il s'affiche automatiquement dans cette langue (si disponible)."
     "screenshotsSources": [
       "https://www.laposte.fr/",
       "https://www.service-public.fr/",
@@ -908,6 +1019,26 @@
     "screenshotsSources": []
   },
   {
+    "id": 136,
+    "title": "Chaque lien est doté d'un intitulé dans le code source.",
+    "authors": ["ROMAIN DANIEL"],
+    "path": "/rules/136",
+    "description": "Un lien se compose au minimum d’une URL et d’un libellé. Si vous ne saisissez pas de libellé, vous avez un lien, certes, mais qui n'a pas de sens et qui risque de ne pas être perçu ou d’être incorrectement compris par les utilisateurs et les moteurs de recherche.",
+    "tags": ["Accessibilité", "Développement", "SEO", "HTML"],
+    "objectives": [
+      "Rendre les liens compréhensibles pour les utilisateurs de lecteurs d'écran.",
+      "Permettre aux liens d'être cliquables même si les images ou les styles CSS ne se chargent pas.",
+      "Améliorer le référencement (les moteurs de recherche utilisent le texte du lien pour comprendre la cible)."
+    ],
+    "implementationIntro": "",
+    "implementation": [
+      "S'assurer que chaque balise <a> contient du texte.",
+      "Si le lien est une image, utiliser l'attribut alt.",
+      "Si le lien est une icône (SVG/Font), ajouter un texte caché via une classe CSS (ex: .sr-only) ou un attribut aria-label."
+    ],
+    "control": [
+      "Inspecter le code source des liens ne contenant pas de texte visible.",
+      "Vérifier la présence d'un mécanisme de remplacement (alt, aria-label, texte caché)."
     "id": 25,
     "title": "L'en-tête HTTP Referrer-Policy est configuré",
     "authors": ["Edwiyyin"],
@@ -1036,6 +1167,26 @@
     "screenshotsSources": []
   },
   {
+    "id": 137,
+    "title": "Le libellé de chaque lien décrit sa fonction ou la nature du contenu vers lequel il pointe.",
+    "authors": ["ROMAIN DANIEL"],
+    "path": "/rules/137",
+    "description": "Pour s’en tenir à des contre-exemples fréquents de cette bonne pratique : les libellés de liens « Cliquer ici » et « Lire la suite » ne vous donnent aucune idée de l’endroit où vous allez vous rendre en cliquant dessus.",
+    "tags": ["Accessibilité", "Éditorial", "SEO", "Liens"],
+    "objectives": [
+      "Permettre aux utilisateurs de comprendre la destination d'un lien sans avoir à lire le texte environnant.",
+      "Faciliter la navigation pour les utilisateurs de lecteurs d'écran (qui naviguent souvent de lien en lien).",
+      "Améliorer le référencement naturel (les mots-clés dans le lien ont du poids)."
+    ],
+    "implementationIntro": "",
+    "implementation": [
+      "Remplacer les libellés génériques ('Cliquez ici', 'Lire la suite', 'En savoir plus') par des libellés explicites.",
+      "Si une contrainte visuelle impose un libellé court, compléter l'information via un attribut title (avec précaution) ou un texte caché (aria-label ou sr-only)."
+    ],
+    "control": [
+      "Parcourir les liens de la page.",
+      "Vérifier si le texte du lien seul suffit à comprendre la destination.",
+      "Vérifier l'absence de liens dupliqués ayant le même libellé mais des destinations différentes."
     "id": 87,
     "title": "Les processus complexes sont accompagnés de la liste de leurs étapes.",
     "authors": ["Adrien LECOMTE"],
@@ -1304,6 +1455,26 @@
     "screenshotsSources": []
   },
   {
+    "id": 138,
+    "title": "Les liens de même nature ont des couleurs, des formes et des comportements identiques sur toutes les pages.",
+    "authors": ["ROMAIN DANIEL"],
+    "path": "/rules/138",
+    "description": "Dès l’arrivée sur votre site, que ce soit par l’accueil ou par une page intérieure, les internautes vont commencer à « apprendre » votre interface. Cette règle a pour objectif d’accélérer leur apprentissage.",
+    "tags": ["Design", "UX", "CSS", "Accessibilité"],
+    "objectives": [
+      "Réduire la charge cognitive de l'utilisateur (ne pas lui faire deviner ce qui est cliquable).",
+      "Assurer une navigation fluide et prédictible à travers tout le site.",
+      "Renforcer l'identité visuelle et le professionnalisme de l'interface."
+    ],
+    "implementationIntro": "",
+    "implementation": [
+      "Définir une charte graphique web (Design System) stricte pour les éléments interactifs.",
+      "Utiliser des classes CSS globales pour les liens (ex: .btn-primary, .link-text) et éviter les styles inline.",
+      "Vérifier la cohérence des états :hover et :focus sur l'ensemble du site."
+    ],
+    "control": [
+      "Naviguer entre plusieurs pages (Accueil, Liste, Détail, Admin).",
+      "Vérifier que les liens de navigation, les liens contextuels et les boutons d'action conservent le même style visuel pour la même fonction."
     "id": 89,
     "title": "Chaque étape d'un processus complexe permet de revenir à l'étape précédente.",
     "authors": ["Adrien LECOMTE"],
@@ -1383,6 +1554,79 @@
     "screenshotsSources": []
   },
   {
+
+    "id": 139,
+    "title": "Le soulignement est réservé aux liens.",
+    "authors": ["ROMAIN DANIEL"],
+    "path": "/rules/139",
+    "description": "Les internautes sont habitués à associer les contenus soulignés à des liens. En soulignant des contenus qui ne sont pas des liens, vous allez provoquer des clics inutiles. Attention, cette règle ne vous impose pas pour autant de souligner vos liens.",
+    "tags": ["Design", "UX", "CSS", "Conventions"],
+    "objectives": [
+      "Éviter la confusion entre les éléments interactifs et le texte statique.",
+      "Réduire le nombre de clics inutiles (clics de frustration).",
+      "Respecter les conventions historiques du Web."
+    ],
+    "implementationIntro": "",
+    "implementation": [
+      "Utiliser le gras (font-weight) ou l'italique pour l'emphase, jamais le soulignement.",
+      "Réserver la propriété CSS 'text-decoration: underline' exclusivement aux balises <a>.",
+      "Vérifier que les styles de titres (h1-h6) n'incluent pas de soulignement qui pourrait prêter à confusion."
+    ],
+    "control": [
+      "Parcourir les pages et repérer le texte souligné.",
+      "Vérifier que tout texte souligné est bien un lien cliquable.",
+      "Vérifier que les éléments importants (mises en garde, notes) utilisent le gras ou la couleur, pas le soulignement."
+    ],
+    "screenshotsSources": []
+  },
+  {
+    "id": 140,
+    "title": "Les liens sont visuellement différenciés du reste du contenu.",
+    "authors": ["ROMAIN DANIEL"],
+    "path": "/rules/140",
+    "description": "Certains créateurs de sites adorent différencier les liens uniquement au survol. Dans ce cas, un utilisateur qui ne peut pas survoler une page avec son pointeur ne verra pas les liens. Est-ce si rare ? Pensons par exemple aux utilisateurs d’écrans tactiles et à la navigation en mode vocal.",
+    "tags": ["Accessibilité", "Design", "Mobile", "UX"],
+    "objectives": [
+      "Rendre les liens identifiables sans interaction (pas besoin de survoler).",
+      "Garantir l'accès aux liens sur les terminaux tactiles (smartphones, tablettes).",
+      "Améliorer l'accessibilité visuelle pour les malvoyants."
+    ],
+    "implementationIntro": "",
+    "implementation": [
+      "Distinguer les liens du texte environnant par un autre moyen que la seule couleur (ex: soulignement, gras, icône).",
+      "Si la couleur est le seul moyen, assurer un contraste fort (ratio 3:1) avec le texte normal.",
+      "Ne jamais supprimer l'outline de focus sans le remplacer."
+    ],
+    "control": [
+      "Observer la page sans toucher à la souris.",
+      "Vérifier si l'on peut identifier tous les liens au premier coup d'œil."
+    ],
+    "screenshotsSources": []
+  },
+  {
+    "id": 141,
+    "title": "Les liens visités et non visités sont visuellement différenciés.",
+    "authors": ["ROMAIN DANIEL"],
+    "path": "/rules/141",
+    "description": "Par défaut, les feuilles de styles des navigateurs prévoient des couleurs différentes pour les liens visités et non visités. Il est fort légitime de changer ce bleu et ce mauve fort peu seyants, mais pourquoi ne pas maintenir cette différence utile au visiteur ?",
+    "tags": ["Design", "UX", "CSS", "Navigation"],
+    "objectives": [
+      "Permettre à l'utilisateur de repérer les pages qu'il a déjà consultées.",
+      "Éviter les clics redondants et la désorientation.",
+      "Faciliter l'exploration méthodique d'une liste de liens."
+    ],
+    "implementationIntro": "",
+    "implementation": [
+      "Utiliser la pseudo-classe CSS :visited pour définir une couleur distincte.",
+      "S'assurer que le contraste reste suffisant pour les deux états (visité et non visité)."
+    ],
+    "control": [
+      "Cliquer sur un lien dans une liste.",
+      "Revenir à la page précédente.",
+      "Vérifier que le lien cliqué a changé d'aspect visuel (couleur)."
+    ],
+    "screenshotsSources": []},
+
     "id": 93,
     "title": "Les éléments d'une liste déroulante qui peuvent être regroupés le sont de manière appropriée.",
     "authors": ["Adrien LECOMTE"],
